@@ -1,0 +1,7 @@
+name: Quartz
+version: 1.0.0
+description:
+authors: [Mike Botsko]
+website:
+api-version: 1.17
+main: darkhelmet.network.quartz.Quartz

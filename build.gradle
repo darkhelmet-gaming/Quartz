@@ -1,0 +1,73 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath group: 'com.github.rodionmoiseev.gradle.plugins', name: 'idea-utils', version: '0.2'
+    }
+}
+
+plugins {
+    id "com.github.johnrengelman.shadow" version "7.0.0"
+    id "xyz.jpenilla.run-paper" version "1.0.1-SNAPSHOT"
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'idea-utils'
+apply plugin: 'checkstyle'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+
+    maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
+    maven { url = 'https://oss.sonatype.org/content/repositories/central' }
+    maven { url = "https://repo.aikar.co/content/groups/aikar/" }
+    maven { url = "https://repo.codemc.io/repository/maven-public/" }
+    maven { url = "https://jitpack.io" }
+    maven { url = 'https://papermc.io/repo/repository/maven-public/' }
+}
+
+group = project.property("group")
+version = project.property("version")
+targetCompatibility = sourceCompatibility = JavaVersion.VERSION_16
+
+dependencies {
+    compileOnly 'io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT'
+    implementation 'com.zaxxer:HikariCP:4.0.3'
+    implementation 'co.aikar:acf-paper:0.5.0-SNAPSHOT'
+    implementation 'co.aikar:idb-core:1.0.0-SNAPSHOT'
+    implementation group: 'org.quartz-scheduler', name: 'quartz', version: '2.3.0'
+
+}
+
+checkstyle {
+    toolVersion '8.32'
+}
+
+compileJava {
+    options.compilerArgs += ["-parameters"]
+    options.fork = true
+    options.forkOptions.executable = 'javac'
+}
+
+jar {
+    actions = []
+    dependsOn = []
+    dependsOn('shadowJar')
+}
+
+shadowJar {
+    relocate 'co.aikar.commands', 'network.darkhelmet.quartz.acf'
+    relocate 'co.aikar.locales', 'network.darkhelmet.quartz.locales'
+    relocate 'co.aikar.idb', 'network.darkhelmet.quartz.idb'
+    relocate 'org.quartz-scheduler', 'network.darkhelmet.quartz-scheduler'
+}
+
+runServer {
+    // Configure the Minecraft version for our task.
+    // This is the only required configuration besides applying the plugin.
+    // Your plugin's jar (or shadowJar if present) will be used automatically.
+    minecraftVersion("1.17.1")
+}

@@ -1,0 +1,20 @@
+# gradle
+/build/
+/.gradle/
+
+# idea
+/.idea/
+/*.iml
+/*.ipr
+/*.iws
+
+# eclipse
+/bin/
+/.settings/
+/.classpath
+/.project
+
+# custom
+/testserver/
+/run/
+/final/
