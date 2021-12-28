@@ -1,4 +1,4 @@
-package darkhelmet.network.quartz;
+package darkhelmet.network.quartz.config;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
