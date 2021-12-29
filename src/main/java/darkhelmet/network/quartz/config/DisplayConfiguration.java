@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ConfigSerializable
-public class DisplayTypeConfig {
+public class DisplayConfiguration {
     @Comment("Display type")
     private String type = "title";
 
@@ -23,13 +23,33 @@ public class DisplayTypeConfig {
     @Comment("Set a permission node this type will appear for (or 'false' to disable permission use)")
     private String permission = "false";
 
-    public DisplayTypeConfig() {
+    public DisplayConfiguration() {
         templates.add("&#aaaaaa<eventName> &fHas Begun!");
     }
 
-    public DisplayTypeConfig(String on) {
+    public DisplayConfiguration(String on) {
         this();
 
         this.on = on;
+    }
+
+    public boolean enabled() {
+        return enabled;
+    }
+
+    public String on() {
+        return on;
+    }
+
+    public String permission() {
+        return permission;
+    }
+
+    public List<String> templates() {
+        return templates;
+    }
+
+    public String type() {
+        return type;
     }
 }

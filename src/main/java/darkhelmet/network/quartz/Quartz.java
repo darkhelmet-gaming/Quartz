@@ -26,12 +26,8 @@ import java.util.logging.Logger;
 
 import darkhelmet.network.quartz.commands.EventCommand;
 import darkhelmet.network.quartz.commands.QuartzCommand;
-import darkhelmet.network.quartz.config.Config;
-import darkhelmet.network.quartz.config.StorageConfiguration;
-import darkhelmet.network.quartz.config.QuartzConfiguration;
+import darkhelmet.network.quartz.config.*;
 import darkhelmet.network.quartz.listeners.PlayerJoinListener;
-import darkhelmet.network.quartz.models.Event;
-import darkhelmet.network.quartz.models.Schedule;
 import darkhelmet.network.quartz.storage.ConfigurationStorageAdapter;
 import darkhelmet.network.quartz.storage.IStorageAdapter;
 
@@ -67,6 +63,11 @@ public class Quartz extends JavaPlugin {
      * The cron parser.
      */
     private CronParser parser;
+
+    /**
+     * The quartz config.
+     */
+    private QuartzConfiguration quartzConfig;
 
     /**
      * The scheduler.
@@ -119,10 +120,10 @@ public class Quartz extends JavaPlugin {
         }
 
         // Load the plugin configuration
-        final QuartzConfiguration config = Config.getOrCreate(this);
+        quartzConfig = Config.getOrCreate(this);
 
-        if (config.dataSource().equalsIgnoreCase("mysql")) {
-            StorageConfiguration storageConfiguration = config.storageConfiguration();
+        if (quartzConfig.dataSource().equalsIgnoreCase("mysql")) {
+            StorageConfiguration storageConfiguration = quartzConfig.storageConfiguration();
 
             String database = storageConfiguration.database();
             String username = storageConfiguration.username();
@@ -138,7 +139,7 @@ public class Quartz extends JavaPlugin {
             Database db = PooledDatabaseOptions.builder().options(options).createHikariDatabase();
             DB.setGlobalDatabase(db);
         } else {
-            storageAdapter = new ConfigurationStorageAdapter(config);
+            storageAdapter = new ConfigurationStorageAdapter(quartzConfig);
         }
 
         if (isEnabled()) {
@@ -176,6 +177,15 @@ public class Quartz extends JavaPlugin {
     }
 
     /**
+     * Get the quartz configuration.
+     *
+     * @return The quartz configuration
+     */
+    public QuartzConfiguration getQuartzConfig() {
+        return quartzConfig;
+    }
+
+    /**
      * Get the storage adapter.
      *
      * @return The storage adapter
@@ -207,11 +217,11 @@ public class Quartz extends JavaPlugin {
 //
 //            List<DbRow> rows = DB.getResults(sql);
 
-            List<Event> enabledEvents = storageAdapter.getEnabledEvents();
+            List<EventConfiguration> enabledEvents = storageAdapter.getEnabledEvents();
             log(String.format("Loaded %d enabled events.", enabledEvents.size()));
 
-            for (Event event : enabledEvents) {
-                for (Schedule schedule : event.getEnabledSchedules()) {
+            for (EventConfiguration event : enabledEvents) {
+                for (ScheduleConfiguration schedule : event.getEnabledSchedules()) {
                     scheduleJob(event, schedule);
                 }
             }
@@ -226,7 +236,7 @@ public class Quartz extends JavaPlugin {
      * @param event The event
      * @param schedule The schedule
      */
-    private void scheduleJob(Event event, Schedule schedule) {
+    private void scheduleJob(EventConfiguration event, ScheduleConfiguration schedule) {
         String jobKey = event.name() + schedule.starts() + schedule.ends();
         ZonedDateTime now = ZonedDateTime.now();
 
@@ -286,8 +296,8 @@ public class Quartz extends JavaPlugin {
         }
     }
 
-    public List<Event> getActiveEvents() {
-        List<Event> events = new ArrayList<>();
+    public List<EventConfiguration> getActiveEvents() {
+        List<EventConfiguration> events = new ArrayList<>();
 
 //        try {
 //            String sql = "SELECT " +
@@ -354,6 +364,17 @@ public class Quartz extends JavaPlugin {
      */
     public static void error(String message) {
         log.warning("[" + PLUGIN_NAME + "]: " + message);
+    }
+
+    /**
+     * Log a debug message to console.
+     *
+     * @param message String
+     */
+    public void debug(String message) {
+        if (quartzConfig.debug()) {
+            log.info("[" + PLUGIN_NAME + "]: " + message);
+        }
     }
 
     /**

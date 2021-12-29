@@ -4,7 +4,7 @@ import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 
 @ConfigSerializable
-public class ScheduleConfig {
+public class ScheduleConfiguration {
     @Comment("Set the starting time(s). Uses cron syntax.\n" +
             "This example starts the event every Tuesday at midnight.")
     private String starts = "0 0 0 ? * TUE *";
@@ -27,5 +27,13 @@ public class ScheduleConfig {
 
     public boolean enabled() {
         return enabled;
+    }
+
+    @Override
+    public String toString() {
+        return "Schedule[" +
+            "starts=" + starts + ", " +
+            "ends=" + ends + ", " +
+            "enabled=" + enabled + "]";
     }
 }

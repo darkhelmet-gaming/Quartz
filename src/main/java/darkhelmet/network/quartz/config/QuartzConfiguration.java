@@ -5,6 +5,7 @@ import org.spongepowered.configurate.objectmapping.meta.Comment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @ConfigSerializable
 public class QuartzConfiguration {
@@ -12,6 +13,9 @@ public class QuartzConfiguration {
             "Use 'config' to load events from this configuration file.\n" +
             "Use 'mysql' to load events from a MySQL/MariaDB database.\n")
     private String dataSource = "config";
+
+    @Comment("Enable plugin debug mode. Produces extra logging to help diagnose issues.")
+    private boolean debug = false;
 
     @Comment("Configure a list of events.\n" +
             "This block is ignored if data-source value is anything but 'config'")
@@ -22,7 +26,7 @@ public class QuartzConfiguration {
             "and more. These are global and will be used for every event " +
             "configured to use the display types unless the event overrides" +
             "the display template itself.")
-    private List<DisplayTypeConfig> displays = new ArrayList<>();
+    private List<DisplayConfiguration> displays = new ArrayList<>();
 
     @Comment("Configure a MySQL/MariaDB database.\n" +
             "This block is ignored if data-source value is 'config'")
@@ -33,20 +37,27 @@ public class QuartzConfiguration {
         events.add(new EventConfiguration());
 
         // Add sample displays
-        displays.add(new DisplayTypeConfig());
-        displays.add(new DisplayTypeConfig("end"));
+        displays.add(new DisplayConfiguration("end"));
     }
 
     public String dataSource() {
         return this.dataSource;
     }
 
+    public boolean debug() {
+        return debug;
+    }
+
     public List<EventConfiguration> events() {
         return this.events;
     }
 
-    public List<DisplayTypeConfig> displays() {
+    public List<DisplayConfiguration> displays() {
         return displays;
+    }
+
+    public List<DisplayConfiguration> getDisplaysForPhase(String phase) {
+        return displays.stream().filter(display -> display.on().equalsIgnoreCase(phase)).collect(Collectors.toList());
     }
 
     public StorageConfiguration storageConfiguration() {

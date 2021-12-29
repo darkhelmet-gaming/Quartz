@@ -1,6 +1,6 @@
 package darkhelmet.network.quartz.storage;
 
-import darkhelmet.network.quartz.models.Event;
+import darkhelmet.network.quartz.config.EventConfiguration;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +11,7 @@ public interface IStorageAdapter {
      *
      * @return List of enabled events, if any.
      */
-    List<Event> getEnabledEvents();
+    List<EventConfiguration> getEnabledEvents();
 
     /**
      * Get an event by its name.
@@ -19,5 +19,5 @@ public interface IStorageAdapter {
      * @param name The name
      * @return The event, if one exists
      */
-    Optional<Event> getEvent(String name);
+    Optional<EventConfiguration> getEvent(String name);
 }

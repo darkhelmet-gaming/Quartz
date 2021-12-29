@@ -13,20 +13,19 @@ public class PhaseConfiguration {
     private List<String> commands = new ArrayList<>();
 
     @Comment("List all display types (by name) this phase will use.")
-    private List<String> displays = new ArrayList<>();
+    private List<String> useDisplays = new ArrayList<>();
 
     public PhaseConfiguration() {
         commands.add("ping");
 
-        displays.add("broadcast");
-        displays.add("title");
+        useDisplays.add("title");
     }
 
     public List<String> commands() {
-        return displays;
+        return useDisplays;
     }
 
-    public List<String> displays() {
-        return displays;
+    public List<String> useDisplays() {
+        return useDisplays;
     }
 }
