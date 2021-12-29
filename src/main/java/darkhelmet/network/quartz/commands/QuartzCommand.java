@@ -12,9 +12,13 @@ import org.bukkit.command.CommandSender;
 
 @CommandAlias("quartz")
 public class QuartzCommand extends BaseCommand {
-    @Subcommand("refresh")
+    @Subcommand("reload")
     @CommandPermission("quartz.admin")
-    public void onRefresh(CommandSender sender) {
+    public void onReload(CommandSender sender) {
+        // Reloads configuration files
+//        Quartz.getInstance().reloadEventConfiguration();
+
+        // Reload all schedules
         Quartz.getInstance().loadSchedules();
 
         sender.sendMessage(Component.text("Reloaded schedules.", NamedTextColor.GREEN));

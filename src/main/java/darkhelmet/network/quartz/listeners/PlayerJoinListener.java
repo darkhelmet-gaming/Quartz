@@ -1,7 +1,6 @@
 package darkhelmet.network.quartz.listeners;
 
-import darkhelmet.network.quartz.Event;
-import darkhelmet.network.quartz.Messenger;
+import darkhelmet.network.quartz.models.Event;
 import darkhelmet.network.quartz.Quartz;
 
 import org.bukkit.event.EventHandler;
@@ -17,9 +16,9 @@ public class PlayerJoinListener implements Listener {
         Quartz.newChain().async(() -> {
             List<Event> events = Quartz.getInstance().getActiveEvents();
 
-            for (Event activeEvent : events) {
-                event.getPlayer().sendMessage(Messenger.message("Active Event: " + activeEvent.title()));
-            }
+//            for (Event activeEvent : events) {
+//                event.getPlayer().sendMessage(Messenger.message("Active Event: " + activeEvent.title()));
+//            }
         }).execute();
     }
 }

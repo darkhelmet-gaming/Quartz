@@ -5,7 +5,7 @@ import co.aikar.commands.annotation.CommandAlias;
 
 import java.util.List;
 
-import darkhelmet.network.quartz.Event;
+import darkhelmet.network.quartz.models.Event;
 import darkhelmet.network.quartz.Messenger;
 import darkhelmet.network.quartz.Quartz;
 import net.kyori.adventure.text.Component;
@@ -26,9 +26,9 @@ public class EventCommand extends BaseCommand {
                 return;
             }
 
-            for (Event event : events) {
-                sender.sendMessage(Messenger.message("Active Event: " + event.title()));
-            }
+//            for (Event event : events) {
+//                sender.sendMessage(Messenger.message("Active Event: " + event.title()));
+//            }
         }).execute();
     }
 }

@@ -36,6 +36,7 @@ dependencies {
     implementation 'co.aikar:acf-paper:0.5.0-SNAPSHOT'
     implementation 'co.aikar:idb-core:1.0.0-SNAPSHOT'
     implementation 'co.aikar:taskchain-bukkit:3.7.2'
+    implementation 'org.spongepowered:configurate-hocon:4.1.2'
     implementation group: 'org.quartz-scheduler', name: 'quartz', version: '2.3.0'
     implementation group: 'com.cronutils', name: 'cron-utils', version: '9.1.6'
 
@@ -64,6 +65,7 @@ shadowJar {
     relocate 'co.aikar.taskchain', 'network.darkhelmet.mrcraftyswonderemporium.taskchain'
     relocate 'org.quartz-scheduler', 'network.darkhelmet.quartz-scheduler'
     relocate 'com.cronutils', 'network.darkhelmet.cronutils'
+    relocate 'org.spongepowered', 'network.darkhelmet.spongepowered'
 }
 
 runServer {

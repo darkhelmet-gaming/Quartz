@@ -1,39 +1,38 @@
 package darkhelmet.network.quartz.config;
 
-import org.bukkit.configuration.file.FileConfiguration;
+import darkhelmet.network.quartz.Quartz;
+
 import org.bukkit.plugin.Plugin;
+import org.spongepowered.configurate.CommentedConfigurationNode;
+import org.spongepowered.configurate.ConfigurateException;
+import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
 
-public class Config extends ConfigBase {
-    /**
-     * Constructor.
-     *
-     * @param plugin Plugin.
-     */
-    public Config(Plugin plugin) {
-        super(plugin);
-    }
+import java.io.File;
 
-    /**
-     * Get the fileConfig.
-     */
-    @Override
-    public FileConfiguration getConfig() {
-        config = plugin.getConfig();
+public class Config {
+    private Config() {}
 
-        // MySql
-        config.addDefault("quartz.datasource", "mysql");
-        config.addDefault("quartz.mysql.hostname", "127.0.0.1");
-        config.addDefault("quartz.mysql.username", "root");
-        config.addDefault("quartz.mysql.password", "");
-        config.addDefault("quartz.mysql.database", "minecraft");
-        config.addDefault("quartz.mysql.port", 3306);
+    public static QuartzConfiguration getOrCreate(Plugin plugin) {
+        File dataFolder = plugin.getDataFolder();
 
-        // Copy defaults
-        config.options().copyDefaults(true);
+        final HoconConfigurationLoader loader = HoconConfigurationLoader.builder()
+            .file(new File(dataFolder, "quartz.conf"))
+            .build();
 
-        // Save the defaults/config
-        plugin.saveConfig();
+        try {
+            CommentedConfigurationNode root = loader.load();
+            final QuartzConfiguration config = root.get(QuartzConfiguration.class);
+            root.set(QuartzConfiguration.class, config);
+            loader.save(root);
 
-        return config;
+            return config;
+        } catch (final ConfigurateException e) {
+            Quartz.error("An error occurred while loading this configuration: " + e.getMessage());
+            if (e.getCause() != null) {
+                e.getCause().printStackTrace();
+            }
+        }
+
+        return null;
     }
 }
