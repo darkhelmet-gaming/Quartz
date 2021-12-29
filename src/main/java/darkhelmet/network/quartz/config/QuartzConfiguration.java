@@ -17,6 +17,13 @@ public class QuartzConfiguration {
             "This block is ignored if data-source value is anything but 'config'")
     private List<EventConfiguration> events = new ArrayList<>();
 
+    @Comment("Displays are used to notify players of an event phase.\n" +
+            "Here you can customize the format of broadcasts, title/subtitles," +
+            "and more. These are global and will be used for every event " +
+            "configured to use the display types unless the event overrides" +
+            "the display template itself.")
+    private List<DisplayTypeConfig> displays = new ArrayList<>();
+
     @Comment("Configure a MySQL/MariaDB database.\n" +
             "This block is ignored if data-source value is 'config'")
     private StorageConfiguration storageConfiguration = new StorageConfiguration();
@@ -24,6 +31,10 @@ public class QuartzConfiguration {
     public QuartzConfiguration() {
         // Add a sample event configuration
         events.add(new EventConfiguration());
+
+        // Add sample displays
+        displays.add(new DisplayTypeConfig());
+        displays.add(new DisplayTypeConfig("end"));
     }
 
     public String dataSource() {
@@ -32,6 +43,10 @@ public class QuartzConfiguration {
 
     public List<EventConfiguration> events() {
         return this.events;
+    }
+
+    public List<DisplayTypeConfig> displays() {
+        return displays;
     }
 
     public StorageConfiguration storageConfiguration() {

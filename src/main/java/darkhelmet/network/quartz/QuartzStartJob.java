@@ -11,9 +11,14 @@ import java.util.Optional;
 public class QuartzStartJob implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
         JobDataMap dataMap = context.getJobDetail().getJobDataMap();
-        Optional<Event> event = Quartz.getInstance().getStorageAdapter().getEvent(dataMap.getString("eventName"));
-        if (event.isPresent()) {
+        Optional<Event> optionalEvent = Quartz.getInstance().getStorageAdapter().getEvent(dataMap.getString("eventName"));
+        if (optionalEvent.isPresent()) {
+            Event event = optionalEvent.get();
+
             Quartz.log("ACTIVING EVENT " + event);
+
+            // Run all start phase commands
+            //
         }
 
 //        String titleStr = dataMap.getString("title");

@@ -16,10 +16,12 @@ import com.cronutils.model.definition.CronDefinitionBuilder;
 import com.cronutils.model.time.ExecutionTime;
 import com.cronutils.parser.CronParser;
 
+import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.logging.Logger;
 
 import darkhelmet.network.quartz.commands.EventCommand;
@@ -107,7 +109,16 @@ public class Quartz extends JavaPlugin {
         CronDefinition definition = CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ);
         parser = new CronParser(definition);
 
-        // Load the config
+        // Load or create the quartz properties file
+        Properties quartzProperties = null;
+        try {
+            quartzProperties = Config.loadOrCopyQuartzProperties(this);
+        } catch (IOException e) {
+            // Note: if this fails it will use the copy in the resources folder
+            handleException(e);
+        }
+
+        // Load the plugin configuration
         final QuartzConfiguration config = Config.getOrCreate(this);
 
         if (config.dataSource().equalsIgnoreCase("mysql")) {
@@ -141,7 +152,7 @@ public class Quartz extends JavaPlugin {
             manager.registerCommand(new QuartzCommand());
 
             try {
-                SchedulerFactory schedulerFactory = new StdSchedulerFactory();
+                SchedulerFactory schedulerFactory = new StdSchedulerFactory(quartzProperties);
                 scheduler = schedulerFactory.getScheduler();
 
                 loadSchedules();
