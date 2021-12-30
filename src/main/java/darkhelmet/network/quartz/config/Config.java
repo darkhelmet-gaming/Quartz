@@ -22,7 +22,7 @@ public class Config {
      * @param plugin The plugin
      * @return The quartz configuration object
      */
-    public static QuartzConfiguration getOrCreate(Plugin plugin) {
+    public static QuartzConfiguration getOrCreateQuartzConfiguration(Plugin plugin) {
         File dataFolder = plugin.getDataFolder();
 
         final HoconConfigurationLoader loader = HoconConfigurationLoader.builder()
@@ -37,7 +37,42 @@ public class Config {
 
             return config;
         } catch (final ConfigurateException e) {
-            Quartz.error("An error occurred while loading this configuration: " + e.getMessage());
+            Quartz.error("An error occurred while loading the quartz configuration: " + e.getMessage());
+            if (e.getCause() != null) {
+                e.getCause().printStackTrace();
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Get or create the language configuration file.
+     *
+     * @param plugin The plugin
+     * @return The language configuration object
+     */
+    public static LanguageConfiguration getOrCreateLanguageConfiguration(Plugin plugin, String lang) {
+        File langFolder = new File(plugin.getDataFolder(), "lang");
+
+        // If the lang directory doesn't exist, make it
+        if (!langFolder.exists()) {
+            langFolder.mkdir();
+        }
+
+        final HoconConfigurationLoader loader = HoconConfigurationLoader.builder()
+                .file(new File(langFolder, lang + ".conf"))
+                .build();
+
+        try {
+            CommentedConfigurationNode root = loader.load();
+            final LanguageConfiguration config = root.get(LanguageConfiguration.class);
+            root.set(LanguageConfiguration.class, config);
+            loader.save(root);
+
+            return config;
+        } catch (final ConfigurateException e) {
+            Quartz.error("An error occurred while loading the lang configuration: " + e.getMessage());
             if (e.getCause() != null) {
                 e.getCause().printStackTrace();
             }

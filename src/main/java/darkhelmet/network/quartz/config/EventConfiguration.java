@@ -15,13 +15,17 @@ public class EventConfiguration {
     @Comment("Overrides displays for this event only. Leave empty to use global defaults.")
     private List<DisplayConfiguration> displays = new ArrayList<>();
 
-    @Comment("Set the event title. This is used in event messages and lists.")
+    @Comment("Set the event key. This MUST be unique and is used to uniquely identify\n" +
+            "this event through commands and the API.")
+    private String key = "example_event";
+
+    @Comment("Set the event name. This is used in event messages and lists.")
     private String name = "Example Event";
 
     @Comment("Set a permission node this event applies to.\n" +
             "Set value to 'false' to apply to all players.\n" +
-            "If a permission is set, your command(s) need the %player_name% placeholder" +
-            "otherwise they'll be executed once without a player arg," +
+            "If a permission is set, your command(s) need the %player_name% placeholder\n" +
+            "otherwise they'll be executed once without a player arg,\n" +
             "potentially applying to every player.")
     private String permission = "false";
 
@@ -46,6 +50,10 @@ public class EventConfiguration {
 
     public List<DisplayConfiguration> displays() {
         return displays;
+    }
+
+    public String key() {
+        return this.key;
     }
 
     public String name() {

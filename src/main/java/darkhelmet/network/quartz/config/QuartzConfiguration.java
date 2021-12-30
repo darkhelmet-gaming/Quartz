@@ -9,10 +9,10 @@ import java.util.stream.Collectors;
 
 @ConfigSerializable
 public class QuartzConfiguration {
-    @Comment("Configure the data source for events.\n" +
-            "Use 'config' to load events from this configuration file.\n" +
-            "Use 'mysql' to load events from a MySQL/MariaDB database.\n")
-    private String dataSource = "config";
+//    @Comment("Configure the data source for events.\n" +
+//            "Use 'config' to load events from this configuration file.\n" +
+//            "Use 'mysql' to load events from a MySQL/MariaDB database.\n")
+//    private String dataSource = "config";
 
     @Comment("Enable plugin debug mode. Produces extra logging to help diagnose issues.")
     private boolean debug = false;
@@ -28,6 +28,9 @@ public class QuartzConfiguration {
             "the display template itself.")
     private List<DisplayConfiguration> displays = new ArrayList<>();
 
+    @Comment("Determines which language configuration file will be loaded from the 'langs' directory")
+    private String language = "en_us";
+
     public QuartzConfiguration() {
         // Add a sample event configuration
         events.add(new EventConfiguration());
@@ -37,9 +40,9 @@ public class QuartzConfiguration {
         displays.add(new DisplayConfiguration("end"));
     }
 
-    public String dataSource() {
-        return this.dataSource;
-    }
+//    public String dataSource() {
+//        return this.dataSource;
+//    }
 
     public boolean debug() {
         return debug;
@@ -51,6 +54,10 @@ public class QuartzConfiguration {
 
     public List<DisplayConfiguration> displays() {
         return displays;
+    }
+
+    public String language() {
+        return language;
     }
 
     public List<DisplayConfiguration> getDisplaysForPhase(String phase) {

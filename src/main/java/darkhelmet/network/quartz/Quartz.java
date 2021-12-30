@@ -1,10 +1,6 @@
 package darkhelmet.network.quartz;
 
 import co.aikar.commands.PaperCommandManager;
-import co.aikar.idb.DB;
-import co.aikar.idb.Database;
-import co.aikar.idb.DatabaseOptions;
-import co.aikar.idb.PooledDatabaseOptions;
 import co.aikar.taskchain.BukkitTaskChainFactory;
 import co.aikar.taskchain.TaskChain;
 import co.aikar.taskchain.TaskChainFactory;
@@ -24,6 +20,7 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import com.google.common.collect.ImmutableList;
 import darkhelmet.network.quartz.commands.EventCommand;
 import darkhelmet.network.quartz.commands.QuartzCommand;
 import darkhelmet.network.quartz.config.*;
@@ -68,6 +65,11 @@ public class Quartz extends JavaPlugin {
      * The quartz config.
      */
     private QuartzConfiguration quartzConfig;
+
+    /**
+     * The language config.
+     */
+    private LanguageConfiguration langConfig;
 
     /**
      * The scheduler.
@@ -120,27 +122,7 @@ public class Quartz extends JavaPlugin {
         }
 
         // Load the plugin configuration
-        quartzConfig = Config.getOrCreate(this);
-
-        if (quartzConfig.dataSource().equalsIgnoreCase("mysql")) {
-            StorageConfiguration storageConfiguration = quartzConfig.storageConfiguration();
-
-            String database = storageConfiguration.database();
-            String username = storageConfiguration.username();
-            String password = storageConfiguration.password();
-
-            String hostname = storageConfiguration.hostname();
-            String port = storageConfiguration.port();
-            if (port != null) {
-                hostname += ":" + port;
-            }
-
-            DatabaseOptions options = DatabaseOptions.builder().mysql(username, password, database, hostname).build();
-            Database db = PooledDatabaseOptions.builder().options(options).createHikariDatabase();
-            DB.setGlobalDatabase(db);
-        } else {
-            storageAdapter = new ConfigurationStorageAdapter(quartzConfig);
-        }
+        loadConfigurations();
 
         if (isEnabled()) {
             taskChainFactory = BukkitTaskChainFactory.create(this);
@@ -148,6 +130,9 @@ public class Quartz extends JavaPlugin {
             // Initialize and configure the command system
             PaperCommandManager manager = new PaperCommandManager(this);
             manager.enableUnstableAPI("help");
+
+            List<String> eventKeys = storageAdapter.getEnabledEvents().stream().map(event -> event.key().toLowerCase()).toList();
+            manager.getCommandCompletions().registerCompletion("eventKeys", c -> ImmutableList.copyOf(eventKeys));
 
             manager.registerCommand(new EventCommand());
             manager.registerCommand(new QuartzCommand());
@@ -168,11 +153,20 @@ public class Quartz extends JavaPlugin {
     }
 
     /**
+     * Reloads all configuration files.
+     */
+    public void loadConfigurations() {
+        quartzConfig = Config.getOrCreateQuartzConfiguration(this);
+        langConfig = Config.getOrCreateLanguageConfiguration(this, quartzConfig.language());
+        storageAdapter = new ConfigurationStorageAdapter(quartzConfig);
+    }
+
+    /**
      * Get the cron parser.
      *
      * @return The cron parser
      */
-    public CronParser getCronParser() {
+    public CronParser cronParser() {
         return parser;
     }
 
@@ -181,8 +175,17 @@ public class Quartz extends JavaPlugin {
      *
      * @return The quartz configuration
      */
-    public QuartzConfiguration getQuartzConfig() {
+    public QuartzConfiguration quartzConfig() {
         return quartzConfig;
+    }
+
+    /**
+     * Get the active language configuration.
+     *
+     * @return The lang configuration
+     */
+    public LanguageConfiguration langConfig() {
+        return langConfig;
     }
 
     /**
@@ -190,7 +193,7 @@ public class Quartz extends JavaPlugin {
      *
      * @return The storage adapter
      */
-    public IStorageAdapter getStorageAdapter() {
+    public IStorageAdapter storageAdapter() {
         return storageAdapter;
     }
 
@@ -200,22 +203,6 @@ public class Quartz extends JavaPlugin {
     public void loadSchedules() {
         try {
             scheduler.clear();
-
-//            String sql = "SELECT " +
-//                "schedule_id," +
-//                "title," +
-//                "command," +
-//                "start_subtitle," +
-//                "start_broadcast," +
-//                "end_subtitle," +
-//                "end_broadcast," +
-//                "starts," +
-//                "ends " +
-//                "FROM minecraft.quartz_schedules s " +
-//                "JOIN quartz_events e ON e.event_id = s.event_id " +
-//                "WHERE s.is_active = 1 AND e.is_active = 1 AND s.is_expired = 0";
-//
-//            List<DbRow> rows = DB.getResults(sql);
 
             List<EventConfiguration> enabledEvents = storageAdapter.getEnabledEvents();
             log(String.format("Loaded %d enabled events.", enabledEvents.size()));
@@ -241,7 +228,7 @@ public class Quartz extends JavaPlugin {
         ZonedDateTime now = ZonedDateTime.now();
 
         // Verify the schedule start date is in the future
-        Cron starts = getCronParser().parse(schedule.starts());
+        Cron starts = cronParser().parse(schedule.starts());
         Optional<ZonedDateTime> startExec = ExecutionTime.forCron(starts).nextExecution(now);
         if (startExec.isPresent()) {
             try {
@@ -268,7 +255,7 @@ public class Quartz extends JavaPlugin {
             log("Skipping schedule due to a start time with no future executions: " + schedule);
         }
 
-        Cron ends = getCronParser().parse(schedule.ends());
+        Cron ends = cronParser().parse(schedule.ends());
         Optional<ZonedDateTime> endExec = ExecutionTime.forCron(ends).nextExecution(now);
         if (endExec.isPresent()) {
             try {

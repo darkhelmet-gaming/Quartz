@@ -19,7 +19,7 @@ public class EventManager {
     private EventManager() {}
 
     private static Map<String, DisplayConfiguration> getDisplays(EventConfiguration event, String phaseKey) {
-        QuartzConfiguration config = Quartz.getInstance().getQuartzConfig();
+        QuartzConfiguration config = Quartz.getInstance().quartzConfig();
 
         // First, identify which displays this phase uses
         PhaseConfiguration phase = event.start();

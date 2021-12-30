@@ -16,6 +16,16 @@ public class Messenger {
     private Messenger() {}
 
     /**
+     * Build a prefixed error message.
+     *
+     * @param message The message
+     * @return The prefixed message component
+     */
+    public static Component error(String message) {
+        return prefix().append(Component.text(message, NamedTextColor.RED)).build();
+    }
+
+    /**
      * Build a prefixed message.
      *
      * @param message The message
@@ -46,5 +56,15 @@ public class Messenger {
             .append(Component.text(") ", NamedTextColor.DARK_GRAY))
             .append(Component.text(prefix, primaryColor))
             .append(Component.text(" " + SEPARATOR + "", NamedTextColor.GRAY));
+    }
+
+    /**
+     * Build a prefixed success message.
+     *
+     * @param message The message
+     * @return The prefixed message component
+     */
+    public static Component success(String message) {
+        return prefix().append(Component.text(message, NamedTextColor.GREEN)).build();
     }
 }
