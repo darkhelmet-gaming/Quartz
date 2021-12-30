@@ -95,8 +95,10 @@ public class EventManager {
             if (command.contains("%")) {
                 // If commands contain placeholders, run for every player
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    String parsedCommand = PlaceholderAPI.setPlaceholders(player, command);
-                    Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), parsedCommand);
+                    if (event.permission().equalsIgnoreCase("false") || player.hasPermission(event.permission())) {
+                        String parsedCommand = PlaceholderAPI.setPlaceholders(player, command);
+                        Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), parsedCommand);
+                    }
                 }
             } else {
                 // Otherwise just run as a server command
@@ -125,7 +127,7 @@ public class EventManager {
             Component message = MiniMessage.get().parse(rawMessage, template);
 
             for (Player player : Bukkit.getOnlinePlayers()) {
-                if (display.permission().equalsIgnoreCase("false") || player.hasPermission(display.permission())) {
+                if (event.permission().equalsIgnoreCase("false") || player.hasPermission(event.permission())) {
                     player.sendMessage(message);
                 }
             }
@@ -154,7 +156,7 @@ public class EventManager {
 
         // Display for appropriate players
         for (Player player : Bukkit.getOnlinePlayers()) {
-            if (display.permission().equalsIgnoreCase("false") || player.hasPermission(display.permission())) {
+            if (event.permission().equalsIgnoreCase("false") || player.hasPermission(event.permission())) {
                 player.showTitle(title);
             }
         }

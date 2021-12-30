@@ -18,6 +18,13 @@ public class EventConfiguration {
     @Comment("Set the event title. This is used in event messages and lists.")
     private String name = "Example Event";
 
+    @Comment("Set a permission node this event applies to.\n" +
+            "Set value to 'false' to apply to all players.\n" +
+            "If a permission is set, your command(s) need the %player_name% placeholder" +
+            "otherwise they'll be executed once without a player arg," +
+            "potentially applying to every player.")
+    private String permission = "false";
+
     @Comment("You can set multiple schedules for an event, even beyond what cron offers.\n" +
             "Here is a good crontab generator: https://www.freeformatter.com/cron-expression-generator-quartz.html\n" +
             "Times are always based on the timezone of the machine the server is running on.")
@@ -43,6 +50,10 @@ public class EventConfiguration {
 
     public String name() {
         return this.name;
+    }
+
+    public String permission() {
+        return permission;
     }
 
     public List<ScheduleConfiguration> schedules() {

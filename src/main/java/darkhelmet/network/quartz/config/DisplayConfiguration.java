@@ -20,9 +20,6 @@ public class DisplayConfiguration {
     @Comment("Use this display on event 'start' or 'end'")
     private String on = "start";
 
-    @Comment("Set a permission node this type will appear for (or 'false' to disable permission use)")
-    private String permission = "false";
-
     public DisplayConfiguration() {}
 
     public DisplayConfiguration(String on) {
@@ -43,10 +40,6 @@ public class DisplayConfiguration {
 
     public String on() {
         return on;
-    }
-
-    public String permission() {
-        return permission;
     }
 
     public List<String> templates() {
