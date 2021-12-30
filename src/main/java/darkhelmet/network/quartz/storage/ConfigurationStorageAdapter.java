@@ -28,7 +28,7 @@ public class ConfigurationStorageAdapter implements IStorageAdapter {
     }
 
     @Override
-    public Optional<EventConfiguration> getEvent(String name) {
-        return events.stream().filter(event -> event.name().equalsIgnoreCase(name)).findFirst();
+    public Optional<EventConfiguration> getEvent(String key) {
+        return events.stream().filter(event -> event.key().equalsIgnoreCase(key)).findFirst();
     }
 }

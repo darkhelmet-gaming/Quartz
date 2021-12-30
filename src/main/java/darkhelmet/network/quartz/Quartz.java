@@ -235,7 +235,7 @@ public class Quartz extends JavaPlugin {
                 // Build the start job detail
                 JobDetail startJob = newJob(QuartzStartJob.class)
                     .withIdentity("eventStart" + jobKey, "quartzGroup")
-                    .usingJobData("eventName", event.name())
+                    .usingJobData("eventKey", event.key())
                     .build();
 
                 // Build the start cron trigger
@@ -262,7 +262,7 @@ public class Quartz extends JavaPlugin {
                 // Build the end job detail
                 JobDetail endJob = newJob(QuartzEndJob.class)
                     .withIdentity("eventEnd" + jobKey, "quartzGroup")
-                    .usingJobData("eventName", event.name())
+                    .usingJobData("eventKey", event.key())
                     .build();
 
                 // Build the end cron trigger

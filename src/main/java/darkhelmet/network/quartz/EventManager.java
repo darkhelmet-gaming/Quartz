@@ -92,28 +92,32 @@ public class EventManager {
                 event.name(),
                 command));
 
-            if (command.contains("%")) {
-                // If commands contain placeholders, run for every player
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    if (event.permission().equalsIgnoreCase("false") || player.hasPermission(event.permission())) {
-                        String parsedCommand = PlaceholderAPI.setPlaceholders(player, command);
-                        Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), parsedCommand);
+            // Events via the job scheduler are async, so we need to execute commands on the game thread
+            Bukkit.getScheduler().runTask(Quartz.getInstance(), () -> {
+                if (command.contains("%")) {
+                    // If commands contain placeholders, run for every player
+                    for (Player player : Bukkit.getOnlinePlayers()) {
+                        if (event.permission().equalsIgnoreCase("false") || player.hasPermission(event.permission())) {
+                            String parsedCommand = PlaceholderAPI.setPlaceholders(player, command);
+                            Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), parsedCommand);
+                        }
                     }
+                } else {
+                    // Otherwise just run as a server command
+                    Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command);
                 }
-            } else {
-                // Otherwise just run as a server command
-                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command);
-            }
+            });
         }
     }
 
     private static void showDisplays(EventConfiguration event, String phase) {
         Map<String, DisplayConfiguration> displays = getDisplays(event, phase);
 
-        // For each display type, display it!
         if (displays.containsKey("title")) {
             showTitle(event, displays.get("title"));
-        } else if (displays.containsKey("chat")) {
+        }
+
+        if (displays.containsKey("chat")) {
             showChatMessage(event, displays.get("chat"));
         }
     }

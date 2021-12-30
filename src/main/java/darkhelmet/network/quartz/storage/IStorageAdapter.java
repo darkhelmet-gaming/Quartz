@@ -14,10 +14,10 @@ public interface IStorageAdapter {
     List<EventConfiguration> getEnabledEvents();
 
     /**
-     * Get an event by its name.
+     * Get an event by its key.
      *
-     * @param name The name
+     * @param key The key
      * @return The event, if one exists
      */
-    Optional<EventConfiguration> getEvent(String name);
+    Optional<EventConfiguration> getEvent(String key);
 }

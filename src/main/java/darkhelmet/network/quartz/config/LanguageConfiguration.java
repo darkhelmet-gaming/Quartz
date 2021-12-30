@@ -9,4 +9,7 @@ public class LanguageConfiguration {
     public String forceEndingEvent = "Force ending event %s";
     public String simulatingEventStart = "Simulating start for event %s";
     public String simulatingEventEnd = "Simulating ending end for event %s";
+    public String noActiveEvents = "There are no active events.";
+    public String listHeading = "Listing %s";
+    public String activeEvents = "Active Events";
 }
