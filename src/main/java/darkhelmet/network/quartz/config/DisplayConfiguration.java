@@ -23,12 +23,16 @@ public class DisplayConfiguration {
     @Comment("Set a permission node this type will appear for (or 'false' to disable permission use)")
     private String permission = "false";
 
-    public DisplayConfiguration() {
-        templates.add("&#aaaaaa<eventName> &fHas Begun!");
-    }
+    public DisplayConfiguration() {}
 
     public DisplayConfiguration(String on) {
         this();
+
+        if (on.equalsIgnoreCase("start")) {
+            templates.add("<#00ff00><eventName> <white>Has Begun!");
+        } else {
+            templates.add("<#00ff00><eventName> <white>Has Ended!");
+        }
 
         this.on = on;
     }

@@ -16,13 +16,13 @@ public class PhaseConfiguration {
     private List<String> useDisplays = new ArrayList<>();
 
     public PhaseConfiguration() {
-        commands.add("ping");
+        commands.add("effect give %player_name% levitation 3 0");
 
         useDisplays.add("title");
     }
 
     public List<String> commands() {
-        return useDisplays;
+        return commands;
     }
 
     public List<String> useDisplays() {

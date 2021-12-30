@@ -2,8 +2,10 @@ package darkhelmet.network.quartz;
 
 import darkhelmet.network.quartz.config.*;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.Template;
 import net.kyori.adventure.title.Title;
 
 import org.bukkit.Bukkit;
@@ -44,6 +46,12 @@ public class EventManager {
             }
         }
 
+        if (displayKeys.isEmpty()) {
+            Quartz.getInstance().debug(String.format("No displays used for phase [%s] of event [%s]",
+                phaseKey,
+                event.name()));
+        }
+
         for (String displayKey : displayKeys) {
             if (displays.containsKey(displayKey)) {
                 Quartz.getInstance().debug(String.format("Using valid, enabled display for event [%s]: %s",
@@ -64,6 +72,10 @@ public class EventManager {
         showDisplays(event, "start");
     }
 
+    public static void simulateEnd(EventConfiguration event) {
+        showDisplays(event, "end");
+    }
+
     public static void start(EventConfiguration event) {
         showDisplays(event, "start");
         runCommands(event, "start");
@@ -75,58 +87,75 @@ public class EventManager {
     }
 
     private static void runCommands(EventConfiguration event, String phase) {
-        Bukkit.getScheduler().runTask(Quartz.getInstance(), () -> {
-            List<String> commands = event.start().commands();
-            if (phase.equalsIgnoreCase("end")) {
-                commands = event.end().commands();
-            }
+        for (String command : event.getPhase(phase).commands()) {
+            Quartz.getInstance().debug(String.format("Running command for event [%s]: %s",
+                event.name(),
+                command));
 
-            for (String command : commands) {
+            if (command.contains("%")) {
+                // If commands contain placeholders, run for every player
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    String parsedCommand = PlaceholderAPI.setPlaceholders(player, command);
+                    Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), parsedCommand);
+                }
+            } else {
+                // Otherwise just run as a server command
                 Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command);
             }
-        });
+        }
     }
 
     private static void showDisplays(EventConfiguration event, String phase) {
-        // Displays
         Map<String, DisplayConfiguration> displays = getDisplays(event, phase);
 
         // For each display type, display it!
         if (displays.containsKey("title")) {
-            DisplayConfiguration titleConfig = displays.get("title");
+            showTitle(event, displays.get("title"));
+        } else if (displays.containsKey("chat")) {
+            showChatMessage(event, displays.get("chat"));
+        }
+    }
 
-            String titleStr = "";
-            String subtitleStr = "";
+    private static void showChatMessage(EventConfiguration event, DisplayConfiguration display) {
+        if (display.templates().size() == 1) {
+            // Build replacement templates
+            Template template = Template.of("eventName", event.name());
 
-            if (titleConfig.templates().size() == 1) {
-                titleStr = titleConfig.templates().get(0);
-            }
-
-            if (titleConfig.templates().size() == 2) {
-                subtitleStr = titleConfig.templates().get(1);
-            }
-
-            Component mainTitle = LegacyComponentSerializer.legacy('&').deserialize(titleStr);
-            Component subTitle = LegacyComponentSerializer.legacy('&').deserialize(subtitleStr);
-            Title title = Title.title(mainTitle, subTitle);
+            String rawMessage = display.templates().get(0);
+            Component message = MiniMessage.get().parse(rawMessage, template);
 
             for (Player player : Bukkit.getOnlinePlayers()) {
-                if (titleConfig.permission().equalsIgnoreCase("false") || player.hasPermission(titleConfig.permission())) {
-                    player.showTitle(title);
+                if (display.permission().equalsIgnoreCase("false") || player.hasPermission(display.permission())) {
+                    player.sendMessage(message);
                 }
             }
         }
+    }
 
-        if (displays.containsKey("broadcast")) {
-            DisplayConfiguration broadcastConfig = displays.get("broadcast");
-            if (broadcastConfig.templates().size() == 1) {
-                String template = broadcastConfig.templates().get(0);
+    private static void showTitle(EventConfiguration event, DisplayConfiguration display) {
+        String titleStr = "";
+        String subtitleStr = "";
 
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    if (broadcastConfig.permission().equalsIgnoreCase("false") || player.hasPermission(broadcastConfig.permission())) {
-                        player.sendMessage(template);
-                    }
-                }
+        if (display.templates().size() == 1) {
+            titleStr = display.templates().get(0);
+        }
+
+        if (display.templates().size() == 2) {
+            subtitleStr = display.templates().get(1);
+        }
+
+        // Build replacement templates
+        Template template = Template.of("eventName", event.name());
+
+        // Build the title/components
+        Component mainTitle = MiniMessage.get().parse(titleStr, template);
+        Component subTitle = MiniMessage.get().parse(subtitleStr, template);
+        Title title = Title.title(mainTitle, subTitle);
+
+        // Display for appropriate players
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (display.permission().equalsIgnoreCase("false") || player.hasPermission(display.permission())) {
+                player.showTitle(title);
             }
         }
     }

@@ -28,15 +28,12 @@ public class QuartzConfiguration {
             "the display template itself.")
     private List<DisplayConfiguration> displays = new ArrayList<>();
 
-    @Comment("Configure a MySQL/MariaDB database.\n" +
-            "This block is ignored if data-source value is 'config'")
-    private StorageConfiguration storageConfiguration = new StorageConfiguration();
-
     public QuartzConfiguration() {
         // Add a sample event configuration
         events.add(new EventConfiguration());
 
         // Add sample displays
+        displays.add(new DisplayConfiguration("start"));
         displays.add(new DisplayConfiguration("end"));
     }
 
@@ -58,9 +55,5 @@ public class QuartzConfiguration {
 
     public List<DisplayConfiguration> getDisplaysForPhase(String phase) {
         return displays.stream().filter(display -> display.on().equalsIgnoreCase(phase)).collect(Collectors.toList());
-    }
-
-    public StorageConfiguration storageConfiguration() {
-        return this.storageConfiguration;
     }
 }

@@ -5,3 +5,4 @@ authors: [Mike Botsko]
 website:
 api-version: 1.17
 main: darkhelmet.network.quartz.Quartz
+depend: [PlaceholderAPI]

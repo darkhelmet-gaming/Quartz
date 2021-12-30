@@ -76,6 +76,16 @@ public class EventConfiguration {
         return schedules.stream().filter(ScheduleConfiguration::enabled).collect(Collectors.toList());
     }
 
+    public PhaseConfiguration getPhase(String phase) {
+        if (phase.equalsIgnoreCase("start")) {
+            return start;
+        } else if (phase.equalsIgnoreCase("end")) {
+            return end;
+        }
+
+        return null;
+    }
+
     @Override
     public String toString() {
         return "EventConfiguration[" +

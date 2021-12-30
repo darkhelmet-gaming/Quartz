@@ -8,8 +8,10 @@ import co.aikar.commands.annotation.Subcommand;
 import darkhelmet.network.quartz.EventManager;
 import darkhelmet.network.quartz.Quartz;
 import darkhelmet.network.quartz.config.EventConfiguration;
+
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+
 import org.bukkit.command.CommandSender;
 
 @CommandAlias("quartz")
@@ -26,6 +28,24 @@ public class QuartzCommand extends BaseCommand {
         sender.sendMessage(Component.text("Reloaded schedules.", NamedTextColor.GREEN));
     }
 
+    @Subcommand("forcestart")
+    @CommandPermission("quartz.admin")
+    public void onForceStart(CommandSender sender) {
+        // @todo fixme
+        EventConfiguration event = Quartz.getInstance().getQuartzConfig().events().get(0);
+
+        EventManager.start(event);
+    }
+
+    @Subcommand("forceend")
+    @CommandPermission("quartz.admin")
+    public void onForceEnd(CommandSender sender) {
+        // @todo fixme
+        EventConfiguration event = Quartz.getInstance().getQuartzConfig().events().get(0);
+
+        EventManager.end(event);
+    }
+
     @Subcommand("simulatestart")
     @CommandPermission("quartz.admin")
     public void onSimulateStart(CommandSender sender) {
@@ -33,5 +53,14 @@ public class QuartzCommand extends BaseCommand {
         EventConfiguration event = Quartz.getInstance().getQuartzConfig().events().get(0);
 
         EventManager.simulateStart(event);
+    }
+
+    @Subcommand("simulateend")
+    @CommandPermission("quartz.admin")
+    public void onSimulateEnd(CommandSender sender) {
+        // @todo fixme
+        EventConfiguration event = Quartz.getInstance().getQuartzConfig().events().get(0);
+
+        EventManager.simulateEnd(event);
     }
 }
