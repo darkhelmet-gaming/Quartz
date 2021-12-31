@@ -1,5 +1,6 @@
 package darkhelmet.network.quartz.config;
 
+import darkhelmet.network.quartz.EventPhase;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 
@@ -91,7 +92,7 @@ public class EventConfiguration {
      * @param phase The phase
      * @return Displays for phase
      */
-    public List<DisplayConfiguration> getDisplaysForPhase(String phase) {
+    public List<DisplayConfiguration> getDisplaysForPhase(EventPhase phase) {
         return displays.stream().filter(display -> display.phases().contains(phase)).collect(Collectors.toList());
     }
 
@@ -104,10 +105,12 @@ public class EventConfiguration {
         return schedules.stream().filter(ScheduleConfiguration::enabled).collect(Collectors.toList());
     }
 
-    public PhaseConfiguration getPhase(String phase) {
-        if (phase.equalsIgnoreCase("start")) {
+    public PhaseConfiguration getPhase(EventPhase phase) {
+        if (phase.equals(EventPhase.START)) {
             return start;
-        } else if (phase.equalsIgnoreCase("end")) {
+        } else if (phase.equals(EventPhase.ACTIVE)) {
+            return active;
+        } else if (phase.equals(EventPhase.END)) {
             return end;
         }
 

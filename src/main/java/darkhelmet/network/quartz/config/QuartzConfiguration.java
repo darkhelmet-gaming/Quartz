@@ -51,7 +51,7 @@ public class QuartzConfiguration {
         return language;
     }
 
-    public List<DisplayConfiguration> getDisplaysForPhase(String phase) {
+    public List<DisplayConfiguration> getDisplaysForPhase(EventPhase phase) {
         return displays.stream().filter(display -> display.phases().contains(phase)).collect(Collectors.toList());
     }
 }

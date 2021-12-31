@@ -1,6 +1,7 @@
 package darkhelmet.network.quartz.listeners;
 
 import darkhelmet.network.quartz.EventManager;
+import darkhelmet.network.quartz.EventPhase;
 import darkhelmet.network.quartz.config.EventConfiguration;
 import darkhelmet.network.quartz.Quartz;
 
@@ -17,7 +18,7 @@ public class PlayerJoinListener implements Listener {
         List<EventConfiguration> events = Quartz.getInstance().getActiveEvents();
 
         for (EventConfiguration activeEvent : events) {
-            EventManager.showDisplays(activeEvent, "active");
+            EventManager.showDisplays(activeEvent, EventPhase.ACTIVE);
         }
     }
 }
