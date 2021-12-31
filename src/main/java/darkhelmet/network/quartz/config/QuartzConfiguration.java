@@ -18,8 +18,7 @@ public class QuartzConfiguration {
     @Comment("Enable plugin debug mode. Produces extra logging to help diagnose issues.")
     private boolean debug = false;
 
-    @Comment("Configure a list of events.\n" +
-            "This block is ignored if data-source value is anything but 'config'")
+    @Comment("Configure a list of events.")
     private List<EventConfiguration> events = new ArrayList<>();
 
     @Comment("Displays are used to notify players of an event phase.\n" +

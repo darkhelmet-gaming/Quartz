@@ -19,7 +19,7 @@ public class DisplayConfiguration {
     @Comment("Enable or disable this message type. (Will prevent all events from using this type)")
     private boolean enabled = true;
 
-    @Comment("Use this display on event 'start', 'active', 'end', or any combination.")
+    @Comment("Use this display on event 'START', 'ACTIVE', 'END', or any combination.")
     private List<EventPhase> phases = new ArrayList<>();
 
     public DisplayConfiguration() {}
