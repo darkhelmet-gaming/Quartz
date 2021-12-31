@@ -1,5 +1,6 @@
 package darkhelmet.network.quartz.listeners;
 
+import darkhelmet.network.quartz.EventManager;
 import darkhelmet.network.quartz.config.EventConfiguration;
 import darkhelmet.network.quartz.Quartz;
 
@@ -16,9 +17,9 @@ public class PlayerJoinListener implements Listener {
         Quartz.newChain().async(() -> {
             List<EventConfiguration> events = Quartz.getInstance().getActiveEvents();
 
-//            for (EventConfiguration activeEvent : events) {
-//                event.getPlayer().sendMessage("Event In Progress: " + activeEvent.name());
-//            }
+            for (EventConfiguration activeEvent : events) {
+                EventManager.showDisplays(activeEvent, "active");
+            }
         }).execute();
     }
 }

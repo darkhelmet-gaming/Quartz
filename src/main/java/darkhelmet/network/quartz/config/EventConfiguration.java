@@ -37,6 +37,11 @@ public class EventConfiguration {
     @Comment("Configure what happens when this event STARTS (a schedule's start time is reached)")
     private PhaseConfiguration start = new PhaseConfiguration();
 
+    @Comment("Configure what happens when this event IS ACTIVE (event started and has not yet ended)\n" +
+            "Note: This phase configuration is ONLY used when a player joins\n" +
+            "during an active event. Displays or commands are triggered per-player per-join")
+    private PhaseConfiguration active = new PhaseConfiguration();
+
     @Comment("Configure what happens when this event ENDS (a schedule's end time is reached)")
     private PhaseConfiguration end = new PhaseConfiguration();
 
@@ -70,6 +75,10 @@ public class EventConfiguration {
 
     public PhaseConfiguration start() {
         return start;
+    }
+
+    public PhaseConfiguration active() {
+        return active;
     }
 
     public PhaseConfiguration end() {

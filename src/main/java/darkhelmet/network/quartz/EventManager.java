@@ -134,7 +134,7 @@ public class EventManager {
         }
     }
 
-    private static void showDisplays(EventConfiguration event, String phase) {
+    public static void showDisplays(EventConfiguration event, String phase) {
         Map<String, DisplayConfiguration> displays = getDisplays(event, phase);
 
         if (displays.containsKey("title")) {
