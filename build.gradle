@@ -34,10 +34,8 @@ targetCompatibility = sourceCompatibility = JavaVersion.VERSION_16
 dependencies {
     compileOnly 'io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT'
     compileOnly 'me.clip:placeholderapi:2.11.1'
-    implementation 'com.zaxxer:HikariCP:5.0.0'
     implementation 'co.aikar:acf-paper:0.5.0-SNAPSHOT'
     implementation 'co.aikar:idb-core:1.0.0-SNAPSHOT'
-    implementation 'co.aikar:taskchain-bukkit:3.7.2'
     implementation 'org.spongepowered:configurate-hocon:4.1.2'
     implementation 'net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT'
     implementation group: 'org.quartz-scheduler', name: 'quartz', version: '2.3.0'
@@ -65,7 +63,6 @@ shadowJar {
     relocate 'co.aikar.commands', 'network.darkhelmet.quartz.acf'
     relocate 'co.aikar.locales', 'network.darkhelmet.quartz.locales'
     relocate 'co.aikar.idb', 'network.darkhelmet.quartz.idb'
-    relocate 'co.aikar.taskchain', 'network.darkhelmet.mrcraftyswonderemporium.taskchain'
     relocate 'org.quartz-scheduler', 'network.darkhelmet.quartz-scheduler'
     relocate 'com.cronutils', 'network.darkhelmet.cronutils'
     relocate 'org.spongepowered', 'network.darkhelmet.spongepowered'

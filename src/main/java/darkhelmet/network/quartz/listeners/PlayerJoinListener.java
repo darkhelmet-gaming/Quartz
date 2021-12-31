@@ -14,12 +14,10 @@ import java.util.List;
 public class PlayerJoinListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onPlayerJoin(final PlayerJoinEvent event) {
-        Quartz.newChain().async(() -> {
-            List<EventConfiguration> events = Quartz.getInstance().getActiveEvents();
+        List<EventConfiguration> events = Quartz.getInstance().getActiveEvents();
 
-            for (EventConfiguration activeEvent : events) {
-                EventManager.showDisplays(activeEvent, "active");
-            }
-        }).execute();
+        for (EventConfiguration activeEvent : events) {
+            EventManager.showDisplays(activeEvent, "active");
+        }
     }
 }

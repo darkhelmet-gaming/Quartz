@@ -1,9 +1,6 @@
 package darkhelmet.network.quartz;
 
 import co.aikar.commands.PaperCommandManager;
-import co.aikar.taskchain.BukkitTaskChainFactory;
-import co.aikar.taskchain.TaskChain;
-import co.aikar.taskchain.TaskChainFactory;
 
 import com.cronutils.model.Cron;
 import com.cronutils.model.CronType;
@@ -28,7 +25,6 @@ import darkhelmet.network.quartz.listeners.PlayerJoinListener;
 import darkhelmet.network.quartz.storage.ConfigurationStorageAdapter;
 import darkhelmet.network.quartz.storage.IStorageAdapter;
 
-import jdk.jfr.Event;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
@@ -83,11 +79,6 @@ public class Quartz extends JavaPlugin {
     private Scheduler scheduler;
 
     /**
-     * The task chain factory.
-     */
-    private static TaskChainFactory taskChainFactory;
-
-    /**
      * The event configuration storage adapter.
      */
     private static IStorageAdapter storageAdapter;
@@ -131,8 +122,6 @@ public class Quartz extends JavaPlugin {
         loadConfigurations();
 
         if (isEnabled()) {
-            taskChainFactory = BukkitTaskChainFactory.create(this);
-
             // Initialize and configure the command system
             PaperCommandManager manager = new PaperCommandManager(this);
             manager.enableUnstableAPI("help");
@@ -306,16 +295,6 @@ public class Quartz extends JavaPlugin {
      */
     public List<EventConfiguration> getActiveEvents() {
         return storageAdapter().getEnabledEvents().stream().filter(EventManager::isEventActive).collect(Collectors.toList());
-    }
-
-    /**
-     * Create a new task chain.
-     *
-     * @param <T> Type
-     * @return The chain
-     */
-    public static <T> TaskChain<T> newChain() {
-        return taskChainFactory.newChain();
     }
 
     /**

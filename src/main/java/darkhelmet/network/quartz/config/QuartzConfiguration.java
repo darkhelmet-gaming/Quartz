@@ -10,11 +10,6 @@ import java.util.stream.Collectors;
 
 @ConfigSerializable
 public class QuartzConfiguration {
-//    @Comment("Configure the data source for events.\n" +
-//            "Use 'config' to load events from this configuration file.\n" +
-//            "Use 'mysql' to load events from a MySQL/MariaDB database.\n")
-//    private String dataSource = "config";
-
     @Comment("Enable plugin debug mode. Produces extra logging to help diagnose issues.")
     private boolean debug = false;
 
@@ -39,10 +34,6 @@ public class QuartzConfiguration {
         displays.add(new DisplayConfiguration(EventPhase.START));
         displays.add(new DisplayConfiguration(EventPhase.END));
     }
-
-//    public String dataSource() {
-//        return this.dataSource;
-//    }
 
     public boolean debug() {
         return debug;
