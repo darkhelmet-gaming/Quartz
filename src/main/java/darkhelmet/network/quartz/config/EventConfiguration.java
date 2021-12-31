@@ -92,7 +92,7 @@ public class EventConfiguration {
      * @return Displays for phase
      */
     public List<DisplayConfiguration> getDisplaysForPhase(String phase) {
-        return displays.stream().filter(display -> display.on().equalsIgnoreCase(phase)).collect(Collectors.toList());
+        return displays.stream().filter(display -> display.phases().contains(phase)).collect(Collectors.toList());
     }
 
     /**

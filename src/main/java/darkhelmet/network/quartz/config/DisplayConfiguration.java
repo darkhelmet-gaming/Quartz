@@ -17,8 +17,8 @@ public class DisplayConfiguration {
     @Comment("Enable or disable this message type. (Will prevent all events from using this type)")
     private boolean enabled = true;
 
-    @Comment("Use this display on event 'start' or 'end'")
-    private String on = "start";
+    @Comment("Use this display on event 'start', 'active', 'end', or any combination.")
+    private List<String> phases = new ArrayList<>();
 
     public DisplayConfiguration() {}
 
@@ -31,15 +31,16 @@ public class DisplayConfiguration {
             templates.add("<#00ff00><eventName> <white>Has Ended!");
         }
 
-        this.on = on;
+        this.phases.add("start");
+        this.phases.add("end");
     }
 
     public boolean enabled() {
         return enabled;
     }
 
-    public String on() {
-        return on;
+    public List<String> phases() {
+        return phases;
     }
 
     public List<String> templates() {
