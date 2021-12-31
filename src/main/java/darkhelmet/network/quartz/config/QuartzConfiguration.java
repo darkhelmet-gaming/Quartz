@@ -1,5 +1,6 @@
 package darkhelmet.network.quartz.config;
 
+import darkhelmet.network.quartz.EventPhase;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 
@@ -36,8 +37,8 @@ public class QuartzConfiguration {
         events.add(new EventConfiguration());
 
         // Add sample displays
-        displays.add(new DisplayConfiguration("start"));
-        displays.add(new DisplayConfiguration("end"));
+        displays.add(new DisplayConfiguration(EventPhase.START));
+        displays.add(new DisplayConfiguration(EventPhase.END));
     }
 
 //    public String dataSource() {

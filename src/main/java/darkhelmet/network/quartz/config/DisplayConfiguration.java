@@ -1,5 +1,7 @@
 package darkhelmet.network.quartz.config;
 
+import darkhelmet.network.quartz.EventPhase;
+
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 
@@ -18,28 +20,27 @@ public class DisplayConfiguration {
     private boolean enabled = true;
 
     @Comment("Use this display on event 'start', 'active', 'end', or any combination.")
-    private List<String> phases = new ArrayList<>();
+    private List<EventPhase> phases = new ArrayList<>();
 
     public DisplayConfiguration() {}
 
-    public DisplayConfiguration(String on) {
+    public DisplayConfiguration(EventPhase phase) {
         this();
 
-        if (on.equalsIgnoreCase("start")) {
+        if (phase.equals(EventPhase.START)) {
             templates.add("<#00ff00><eventName> <white>Has Begun!");
         } else {
             templates.add("<#00ff00><eventName> <white>Has Ended!");
         }
 
-        this.phases.add("start");
-        this.phases.add("end");
+        this.phases.add(phase);
     }
 
     public boolean enabled() {
         return enabled;
     }
 
-    public List<String> phases() {
+    public List<EventPhase> phases() {
         return phases;
     }
 
