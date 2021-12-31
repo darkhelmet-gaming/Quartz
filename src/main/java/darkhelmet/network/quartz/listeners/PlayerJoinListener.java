@@ -16,8 +16,8 @@ public class PlayerJoinListener implements Listener {
         Quartz.newChain().async(() -> {
             List<EventConfiguration> events = Quartz.getInstance().getActiveEvents();
 
-//            for (Event activeEvent : events) {
-//                event.getPlayer().sendMessage(Messenger.message("Active Event: " + activeEvent.title()));
+//            for (EventConfiguration activeEvent : events) {
+//                event.getPlayer().sendMessage("Event In Progress: " + activeEvent.name());
 //            }
         }).execute();
     }

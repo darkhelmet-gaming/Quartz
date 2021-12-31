@@ -14,20 +14,21 @@ import com.cronutils.parser.CronParser;
 
 import java.io.IOException;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableList;
-import darkhelmet.network.quartz.commands.EventCommand;
+import darkhelmet.network.quartz.commands.EventsCommand;
 import darkhelmet.network.quartz.commands.QuartzCommand;
 import darkhelmet.network.quartz.config.*;
 import darkhelmet.network.quartz.listeners.PlayerJoinListener;
 import darkhelmet.network.quartz.storage.ConfigurationStorageAdapter;
 import darkhelmet.network.quartz.storage.IStorageAdapter;
 
+import jdk.jfr.Event;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
@@ -70,6 +71,11 @@ public class Quartz extends JavaPlugin {
      * The language config.
      */
     private LanguageConfiguration langConfig;
+
+    /**
+     * The event state config.
+     */
+    private EventStateConfiguration eventStateConfig;
 
     /**
      * The scheduler.
@@ -134,7 +140,7 @@ public class Quartz extends JavaPlugin {
             List<String> eventKeys = storageAdapter.getEnabledEvents().stream().map(event -> event.key().toLowerCase()).toList();
             manager.getCommandCompletions().registerCompletion("eventKeys", c -> ImmutableList.copyOf(eventKeys));
 
-            manager.registerCommand(new EventCommand());
+            manager.registerCommand(new EventsCommand());
             manager.registerCommand(new QuartzCommand());
 
             try {
@@ -158,6 +164,7 @@ public class Quartz extends JavaPlugin {
     public void loadConfigurations() {
         quartzConfig = Config.getOrCreateQuartzConfiguration(this);
         langConfig = Config.getOrCreateLanguageConfiguration(this, quartzConfig.language());
+        eventStateConfig = Config.getOrCreateEventStateConfiguration(this);
         storageAdapter = new ConfigurationStorageAdapter(quartzConfig);
     }
 
@@ -168,6 +175,15 @@ public class Quartz extends JavaPlugin {
      */
     public CronParser cronParser() {
         return parser;
+    }
+
+    /**
+     * Get the event state configuration.
+     *
+     * @return The event state
+     */
+    public EventStateConfiguration eventStateConfig() {
+        return eventStateConfig;
     }
 
     /**
@@ -283,46 +299,13 @@ public class Quartz extends JavaPlugin {
         }
     }
 
+    /**
+     * Gets a list of all events with an active schedule.
+     *
+     * @return The list of active events
+     */
     public List<EventConfiguration> getActiveEvents() {
-        List<EventConfiguration> events = new ArrayList<>();
-
-//        try {
-//            String sql = "SELECT " +
-//                "schedule_id," +
-//                "title," +
-//                "starts," +
-//                "ends " +
-//                "FROM minecraft.quartz_schedules s " +
-//                "JOIN quartz_events e ON e.event_id = s.event_id " +
-//                "WHERE s.is_active = 1 AND e.is_active = 1 AND s.is_expired = 0";
-//
-//            List<DbRow> rows = DB.getResults(sql);
-//
-//            for (DbRow row : rows) {
-
-//                Cron startCron = parser.parse(row.getString("starts"));
-//                Cron endCron = parser.parse(row.getString("ends"));
-//
-//                ZonedDateTime now = ZonedDateTime.now();
-//                Optional<ZonedDateTime> lastStartExec = ExecutionTime.forCron(startCron).lastExecution(now);
-//                Optional<ZonedDateTime> lastEndExec = ExecutionTime.forCron(endCron).nextExecution(now);
-//
-//                if (lastStartExec.isPresent() && lastEndExec.isPresent()) {
-//                    ZonedDateTime starts = lastStartExec.get();
-//                    ZonedDateTime ends = lastEndExec.get();
-//
-//                    if (starts.isBefore(now) && ends.isAfter(now)) {
-//                        String title = row.getString("title");
-//
-//                        events.add(new Event(title));
-//                    }
-//                }
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-
-        return events;
+        return storageAdapter().getEnabledEvents().stream().filter(EventManager::isEventActive).collect(Collectors.toList());
     }
 
     /**

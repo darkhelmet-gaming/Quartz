@@ -18,6 +18,10 @@ import java.util.Map;
 public class EventManager {
     private EventManager() {}
 
+    public static boolean isEventActive(EventConfiguration event) {
+        return Quartz.getInstance().eventStateConfig().activeEvents.contains(event.key());
+    }
+
     private static Map<String, DisplayConfiguration> getDisplays(EventConfiguration event, String phaseKey) {
         QuartzConfiguration config = Quartz.getInstance().quartzConfig();
 
@@ -76,14 +80,34 @@ public class EventManager {
         showDisplays(event, "end");
     }
 
-    public static void start(EventConfiguration event) {
-        showDisplays(event, "start");
-        runCommands(event, "start");
+    public static boolean start(EventConfiguration event) {
+        if (!isEventActive(event)) {
+            Quartz.getInstance().eventStateConfig().activeEvents.add(event.key());
+
+            showDisplays(event, "start");
+            runCommands(event, "start");
+
+            Config.saveEventStateConfiguration(Quartz.getInstance(), Quartz.getInstance().eventStateConfig());
+
+            return true;
+        }
+
+        return false;
     }
 
-    public static void end(EventConfiguration event) {
-        showDisplays(event, "end");
-        runCommands(event, "end");
+    public static boolean end(EventConfiguration event) {
+        if (isEventActive(event)) {
+            Quartz.getInstance().eventStateConfig().activeEvents.remove(event.key());
+
+            showDisplays(event, "end");
+            runCommands(event, "end");
+
+            Config.saveEventStateConfiguration(Quartz.getInstance(), Quartz.getInstance().eventStateConfig());
+
+            return true;
+        }
+
+        return false;
     }
 
     private static void runCommands(EventConfiguration event, String phase) {
