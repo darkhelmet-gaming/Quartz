@@ -13,8 +13,10 @@ public class DisplayConfiguration {
     @Comment("Display type(s)")
     private List<String> types = new ArrayList<>();
 
-    @Comment("Format to use during the defined phases for an event (applicable only if event uses this display type)\n" +
-            "Formatting code reference: https://docs.adventure.kyori.net/minimessage")
+    @Comment("Template(s) to use during the defined phases for an event (applicable only if event uses this display type)\n" +
+            "Formatting code reference: https://docs.adventure.kyori.net/minimessage\n" +
+            "For chat display, one template entry = one line.\n" +
+            "For titles, the first template is the title and second is the subtitle.")
     private List<String> templates = new ArrayList<>();
 
     @Comment("Enable or disable this message type. (Will prevent all events from using this type)")

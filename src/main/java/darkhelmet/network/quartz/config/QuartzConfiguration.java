@@ -23,9 +23,9 @@ public class QuartzConfiguration {
     private List<EventConfiguration> events = new ArrayList<>();
 
     @Comment("Displays are used to notify players of an event phase.\n" +
-            "Here you can customize the format of broadcasts, title/subtitles," +
-            "and more. These are global and will be used for every event " +
-            "configured to use the display types unless the event overrides" +
+            "Here you can customize the format of broadcasts, title/subtitles,\n" +
+            "and more. These are global and will be used for every event\n" +
+            "configured to use the display types unless the event overrides\n" +
             "the display template itself.")
     private List<DisplayConfiguration> displays = new ArrayList<>();
 
