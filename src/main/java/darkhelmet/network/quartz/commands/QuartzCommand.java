@@ -8,10 +8,7 @@ import co.aikar.commands.annotation.Description;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.annotation.Values;
 
-import darkhelmet.network.quartz.EventManager;
-import darkhelmet.network.quartz.I18l;
-import darkhelmet.network.quartz.Messenger;
-import darkhelmet.network.quartz.Quartz;
+import darkhelmet.network.quartz.*;
 import darkhelmet.network.quartz.config.EventConfiguration;
 
 import org.bukkit.command.CommandSender;
@@ -73,9 +70,24 @@ public class QuartzCommand extends BaseCommand {
 
         if (optionalEventConfig.isPresent()) {
             EventConfiguration event = optionalEventConfig.get();
-            EventManager.simulateStart(event);
+            EventManager.simulatePhase(event, EventPhase.START);
 
             sender.sendMessage(Messenger.message(String.format(I18l.lang().simulatingEventStart, event.name())));
+        }
+    }
+
+    @Subcommand("simulateactive")
+    @CommandCompletion("@eventKeys")
+    @CommandPermission("quartz.admin")
+    @Description("Activates displays as if event was starting.")
+    public void onSimulateActive(CommandSender sender, @Values("@eventKeys") String eventKey) {
+        Optional<EventConfiguration> optionalEventConfig = Quartz.getInstance().storageAdapter().getEvent(eventKey);
+
+        if (optionalEventConfig.isPresent()) {
+            EventConfiguration event = optionalEventConfig.get();
+            EventManager.simulatePhase(event, EventPhase.ACTIVE);
+
+            sender.sendMessage(Messenger.message(String.format(I18l.lang().simulatingEventActive, event.name())));
         }
     }
 
@@ -88,7 +100,7 @@ public class QuartzCommand extends BaseCommand {
 
         if (optionalEventConfig.isPresent()) {
             EventConfiguration event = optionalEventConfig.get();
-            EventManager.simulateEnd(event);
+            EventManager.simulatePhase(event, EventPhase.END);
 
             sender.sendMessage(Messenger.message(String.format(I18l.lang().simulatingEventEnd, event.name())));
         }

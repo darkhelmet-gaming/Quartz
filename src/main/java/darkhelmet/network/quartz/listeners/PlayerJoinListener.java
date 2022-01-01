@@ -18,7 +18,7 @@ public class PlayerJoinListener implements Listener {
         List<EventConfiguration> events = Quartz.getInstance().getActiveEvents();
 
         for (EventConfiguration activeEvent : events) {
-            EventManager.showDisplays(activeEvent, EventPhase.ACTIVE);
+            EventManager.active(activeEvent);
         }
     }
 }

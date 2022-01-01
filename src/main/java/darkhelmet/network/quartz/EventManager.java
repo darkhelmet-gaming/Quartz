@@ -39,15 +39,23 @@ public class EventManager {
 
         // First, check for event-specific display formats
         for (DisplayConfiguration eventDisplay : event.getDisplaysForPhase(phase)) {
-            if (displayKeys.contains(eventDisplay.type()) && eventDisplay.enabled()) {
-                displays.put(eventDisplay.type(), eventDisplay);
+            if (eventDisplay.enabled()) {
+                for (String type : eventDisplay.types()) {
+                    if (displayKeys.contains(type)) {
+                        displays.put(type, eventDisplay);
+                    }
+                }
             }
         }
 
         // Second, merge in generic display configs
         for (DisplayConfiguration globalDisplay : config.getDisplaysForPhase(phase)) {
-            if (displayKeys.contains(globalDisplay.type()) && globalDisplay.enabled() && !displays.containsKey(globalDisplay.type())) {
-                displays.put(globalDisplay.type(), globalDisplay);
+            if (globalDisplay.enabled()) {
+                for (String type : globalDisplay.types()) {
+                    if (displayKeys.contains(type) && globalDisplay.enabled() && !displays.containsKey(type)) {
+                        displays.put(type, globalDisplay);
+                    }
+                }
             }
         }
 
@@ -73,12 +81,8 @@ public class EventManager {
         return displays;
     }
 
-    public static void simulateStart(EventConfiguration event) {
-        showDisplays(event, EventPhase.START);
-    }
-
-    public static void simulateEnd(EventConfiguration event) {
-        showDisplays(event, EventPhase.END);
+    public static void simulatePhase(EventConfiguration event, EventPhase phase) {
+        showDisplays(event, phase);
     }
 
     public static boolean active(EventConfiguration event) {

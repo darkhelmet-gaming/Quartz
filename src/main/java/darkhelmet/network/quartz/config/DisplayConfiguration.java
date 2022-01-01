@@ -10,8 +10,8 @@ import java.util.List;
 
 @ConfigSerializable
 public class DisplayConfiguration {
-    @Comment("Display type")
-    private String type = "title";
+    @Comment("Display type(s)")
+    private List<String> types = new ArrayList<>();
 
     @Comment("Format to use during the defined phases for an event (applicable only if event uses this display type)")
     private List<String> templates = new ArrayList<>();
@@ -26,6 +26,9 @@ public class DisplayConfiguration {
 
     public DisplayConfiguration(EventPhase phase) {
         this();
+
+        types.add("chat");
+        types.add("title");
 
         if (phase.equals(EventPhase.START)) {
             templates.add("<#00ff00><eventName> <white>Has Begun!");
@@ -48,7 +51,7 @@ public class DisplayConfiguration {
         return templates;
     }
 
-    public String type() {
-        return type;
+    public List<String> types() {
+        return types;
     }
 }
