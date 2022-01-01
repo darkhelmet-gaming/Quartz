@@ -13,7 +13,8 @@ public class DisplayConfiguration {
     @Comment("Display type(s)")
     private List<String> types = new ArrayList<>();
 
-    @Comment("Format to use during the defined phases for an event (applicable only if event uses this display type)")
+    @Comment("Format to use during the defined phases for an event (applicable only if event uses this display type)\n" +
+            "Formatting code reference: https://docs.adventure.kyori.net/minimessage")
     private List<String> templates = new ArrayList<>();
 
     @Comment("Enable or disable this message type. (Will prevent all events from using this type)")

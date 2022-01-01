@@ -10,13 +10,17 @@ import net.kyori.adventure.text.minimessage.Template;
 
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 public class Formatter {
     private Formatter() {}
 
     public static Component format(EventConfiguration event, String rawMessage) {
-        Template template = Template.of("eventName", event.name());
+        Template eventName = Template.of("eventName", event.name());
+        Template eventDescription = Template.of("eventDescription", event.description());
 
-        return MiniMessage.get().parse(rawMessage, template);
+        List<Template> templates = List.of(eventName, eventDescription);
+        return MiniMessage.get().parse(rawMessage, templates);
     }
 
     public static Component format(Player player, EventConfiguration event, String rawMessage) {

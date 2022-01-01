@@ -24,7 +24,7 @@ public class IfEventCommand extends BaseCommand {
             return;
         }
 
-        if (!Quartz.getInstance().getActiveEvents().contains(optionalEventConfig.get())) {
+        if (!EventManager.isEventActive(optionalEventConfig.get())) {
             return;
         }
 

@@ -23,6 +23,9 @@ public class EventConfiguration {
     @Comment("Set the event name. This is used in event messages and lists.")
     private String name = "Example Event";
 
+    @Comment("Set the event name. This is used in event messages and lists.")
+    private String description = "This event applies levitation for 3 seconds.";
+
     @Comment("Set a permission node this event applies to.\n" +
             "Set value to 'false' to apply to all players.\n" +
             "If a permission is set, your command(s) need the %player_name% placeholder\n" +
@@ -48,6 +51,10 @@ public class EventConfiguration {
 
     public EventConfiguration() {
         schedules.add(new ScheduleConfiguration());
+    }
+
+    public String description() {
+        return description;
     }
 
     public boolean enabled() {
