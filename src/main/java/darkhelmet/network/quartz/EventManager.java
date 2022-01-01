@@ -81,6 +81,17 @@ public class EventManager {
         showDisplays(event, EventPhase.END);
     }
 
+    public static boolean active(EventConfiguration event) {
+        if (isEventActive(event)) {
+            showDisplays(event, EventPhase.ACTIVE);
+            runCommands(event, EventPhase.ACTIVE);
+
+            return true;
+        }
+
+        return false;
+    }
+
     public static boolean start(EventConfiguration event) {
         if (!isEventActive(event)) {
             Quartz.getInstance().eventStateConfig().activeEvents.add(event.key());

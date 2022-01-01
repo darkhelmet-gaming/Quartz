@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableList;
 import darkhelmet.network.quartz.commands.EventsCommand;
+import darkhelmet.network.quartz.commands.IfEventCommand;
 import darkhelmet.network.quartz.commands.QuartzCommand;
 import darkhelmet.network.quartz.config.*;
 import darkhelmet.network.quartz.jobs.QuartzCommandJob;
@@ -133,6 +134,7 @@ public class Quartz extends JavaPlugin {
             manager.getCommandCompletions().registerCompletion("eventKeys", c -> ImmutableList.copyOf(eventKeys));
 
             manager.registerCommand(new EventsCommand());
+            manager.registerCommand(new IfEventCommand());
             manager.registerCommand(new QuartzCommand());
 
             try {

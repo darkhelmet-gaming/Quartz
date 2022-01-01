@@ -13,7 +13,7 @@ public class DisplayConfiguration {
     @Comment("Display type")
     private String type = "title";
 
-    @Comment("Format to use when an event begins (applicable only if event uses this display type)")
+    @Comment("Format to use during the defined phases for an event (applicable only if event uses this display type)")
     private List<String> templates = new ArrayList<>();
 
     @Comment("Enable or disable this message type. (Will prevent all events from using this type)")
