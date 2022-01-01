@@ -1,8 +1,15 @@
 package darkhelmet.network.quartz;
 
-import darkhelmet.network.quartz.config.*;
+import darkhelmet.network.quartz.config.Config;
+import darkhelmet.network.quartz.config.DisplayConfiguration;
+import darkhelmet.network.quartz.config.EventConfiguration;
+import darkhelmet.network.quartz.config.PhaseConfiguration;
+import darkhelmet.network.quartz.config.QuartzConfiguration;
+import darkhelmet.network.quartz.events.QuartzEventEnd;
+import darkhelmet.network.quartz.events.QuartzEventStart;
 
 import me.clip.placeholderapi.PlaceholderAPI;
+
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 
@@ -83,6 +90,9 @@ public class EventManager {
 
             Config.saveEventStateConfiguration(Quartz.getInstance(), Quartz.getInstance().eventStateConfig());
 
+            QuartzEventStart bukkitEvent = new QuartzEventStart(event);
+            Bukkit.getServer().getPluginManager().callEvent(bukkitEvent);
+
             return true;
         }
 
@@ -97,6 +107,9 @@ public class EventManager {
             runCommands(event, EventPhase.END);
 
             Config.saveEventStateConfiguration(Quartz.getInstance(), Quartz.getInstance().eventStateConfig());
+
+            QuartzEventEnd bukkitEvent = new QuartzEventEnd(event);
+            Bukkit.getServer().getPluginManager().callEvent(bukkitEvent);
 
             return true;
         }
@@ -141,12 +154,12 @@ public class EventManager {
     }
 
     private static void showChatMessage(EventConfiguration event, DisplayConfiguration display) {
-        if (display.templates().size() == 1) {
-            String rawMessage = display.templates().get(0);
-
+        if (!display.templates().isEmpty()) {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 if (event.permission().equalsIgnoreCase("false") || player.hasPermission(event.permission())) {
-                    player.sendMessage(Formatter.format(player, event, rawMessage));
+                    for (String rawMessage : display.templates()) {
+                        player.sendMessage(Formatter.format(player, event, rawMessage));
+                    }
                 }
             }
         }
