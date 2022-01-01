@@ -1,5 +1,6 @@
 package darkhelmet.network.quartz.storage;
 
+import darkhelmet.network.quartz.config.CommandConfiguration;
 import darkhelmet.network.quartz.config.EventConfiguration;
 import darkhelmet.network.quartz.config.QuartzConfiguration;
 
@@ -8,6 +9,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ConfigurationStorageAdapter implements IStorageAdapter {
+    private final List<CommandConfiguration> commands;
+
     /**
      * Cache of all events
      */
@@ -19,7 +22,13 @@ public class ConfigurationStorageAdapter implements IStorageAdapter {
      * @param config The quartz configuration
      */
     public ConfigurationStorageAdapter(QuartzConfiguration config) {
+        commands = config.commands();
         events = config.events();
+    }
+
+    @Override
+    public List<CommandConfiguration> getEnabledCommands() {
+        return commands.stream().filter(CommandConfiguration::enabled).collect(Collectors.toList());
     }
 
     @Override

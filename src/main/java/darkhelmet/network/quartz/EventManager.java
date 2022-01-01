@@ -141,6 +141,15 @@ public class EventManager {
         }
     }
 
+    public static void runCommand(String command) {
+        Quartz.getInstance().debug(String.format("Running command: %s", command));
+
+        // Events via the job scheduler are async, so we need to execute commands on the game thread
+        Bukkit.getScheduler().runTask(Quartz.getInstance(), () -> {
+            Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command);
+        });
+    }
+
     public static void showDisplays(EventConfiguration event, EventPhase phase) {
         Map<String, DisplayConfiguration> displays = getDisplays(event, phase);
 

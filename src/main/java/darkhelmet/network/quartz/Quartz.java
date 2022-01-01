@@ -21,6 +21,9 @@ import com.google.common.collect.ImmutableList;
 import darkhelmet.network.quartz.commands.EventsCommand;
 import darkhelmet.network.quartz.commands.QuartzCommand;
 import darkhelmet.network.quartz.config.*;
+import darkhelmet.network.quartz.jobs.QuartzCommandJob;
+import darkhelmet.network.quartz.jobs.QuartzEndJob;
+import darkhelmet.network.quartz.jobs.QuartzStartJob;
 import darkhelmet.network.quartz.listeners.PlayerJoinListener;
 import darkhelmet.network.quartz.storage.ConfigurationStorageAdapter;
 import darkhelmet.network.quartz.storage.IStorageAdapter;
@@ -209,6 +212,13 @@ public class Quartz extends JavaPlugin {
         try {
             scheduler.clear();
 
+            List<CommandConfiguration> enabledCommands = storageAdapter.getEnabledCommands();
+            log(String.format("Loaded %d enabled commands.", enabledCommands.size()));
+
+            for (CommandConfiguration command : enabledCommands) {
+                scheduleJob(command);
+            }
+
             List<EventConfiguration> enabledEvents = storageAdapter.getEnabledEvents();
             log(String.format("Loaded %d enabled events.", enabledEvents.size()));
 
@@ -219,6 +229,39 @@ public class Quartz extends JavaPlugin {
             }
         } catch (SchedulerException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void scheduleJob(CommandConfiguration command) {
+        String jobKey = command.command();
+        ZonedDateTime now = ZonedDateTime.now();
+
+        // Verify the schedule start date is in the future
+        Cron starts = cronParser().parse(command.cron());
+        Optional<ZonedDateTime> startExec = ExecutionTime.forCron(starts).nextExecution(now);
+        if (startExec.isPresent()) {
+            try {
+                // Build the start job detail
+                JobDetail commandJob = newJob(QuartzCommandJob.class)
+                        .withIdentity("commandExec" + jobKey, "quartzGroup")
+                        .usingJobData("command", command.command())
+                        .build();
+
+                // Build the start cron trigger
+                CronTrigger commandTrigger = TriggerBuilder.newTrigger()
+                        .withIdentity("commandCron" + jobKey, "quartzGroup")
+                        .withSchedule(CronScheduleBuilder.cronSchedule(command.cron()))
+                        .forJob("commandExec" + jobKey, "quartzGroup")
+                        .build();
+
+                scheduler.scheduleJob(commandJob, commandTrigger);
+            } catch (SchedulerException e) {
+                error("Error thrown while scheduling command: " + command);
+
+                handleException(e);
+            }
+        } else {
+            log("Skipping command due to an execution time with no future executions: " + command);
         }
     }
 
