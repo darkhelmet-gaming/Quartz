@@ -16,7 +16,6 @@ import darkhelmet.network.quartz.commands.QuartzCommand;
 import darkhelmet.network.quartz.config.CommandConfiguration;
 import darkhelmet.network.quartz.config.Config;
 import darkhelmet.network.quartz.config.EventConfiguration;
-import darkhelmet.network.quartz.config.EventStateConfiguration;
 import darkhelmet.network.quartz.config.LanguageConfiguration;
 import darkhelmet.network.quartz.config.QuartzConfiguration;
 import darkhelmet.network.quartz.config.ScheduleConfiguration;
@@ -27,6 +26,7 @@ import darkhelmet.network.quartz.listeners.PlayerJoinListener;
 import darkhelmet.network.quartz.storage.ConfigurationStorageAdapter;
 import darkhelmet.network.quartz.storage.IStorageAdapter;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
@@ -79,11 +79,6 @@ public class Quartz extends JavaPlugin {
      * The language config.
      */
     private LanguageConfiguration langConfig;
-
-    /**
-     * The event state config.
-     */
-    private EventStateConfiguration eventStateConfig;
 
     /**
      * The scheduler.
@@ -169,9 +164,14 @@ public class Quartz extends JavaPlugin {
      * Reloads all configuration files.
      */
     public void loadConfigurations() {
-        quartzConfig = Config.getOrCreateQuartzConfiguration(this);
-        langConfig = Config.getOrCreateLanguageConfiguration(this, quartzConfig.language());
-        eventStateConfig = Config.getOrCreateEventStateConfiguration(this);
+        // Load the main config
+        File quartzConfigFile = new File(getDataFolder(), "quartz.conf");
+        quartzConfig = Config.getOrWriteConfiguration(QuartzConfiguration.class, quartzConfigFile);
+
+        // Load the language file
+        File langFile = new File(getDataFolder(), "lang/" + quartzConfig.language() + ".conf");
+        langConfig = Config.getOrWriteConfiguration(LanguageConfiguration.class, langFile);
+
         storageAdapter = new ConfigurationStorageAdapter(quartzConfig);
     }
 
@@ -182,15 +182,6 @@ public class Quartz extends JavaPlugin {
      */
     public CronParser cronParser() {
         return parser;
-    }
-
-    /**
-     * Get the event state configuration.
-     *
-     * @return The event state
-     */
-    public EventStateConfiguration eventStateConfig() {
-        return eventStateConfig;
     }
 
     /**

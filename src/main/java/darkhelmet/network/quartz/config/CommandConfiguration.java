@@ -7,7 +7,7 @@ import org.spongepowered.configurate.objectmapping.meta.Comment;
 public class CommandConfiguration {
     @Comment("The command to be executed.\n" +
             "Commands will be executed by the console and will effectively have OP permissions.")
-    private String command = "broadcast example scheduled command";
+    private String command = "say example scheduled command";
 
     @Comment("Configure the execution time(s) of this command using cron syntax.\n" +
             "Here is a good crontab generator: https://www.freeformatter.com/cron-expression-generator-quartz.html\n" +

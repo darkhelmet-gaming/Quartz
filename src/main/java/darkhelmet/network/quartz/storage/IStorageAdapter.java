@@ -2,6 +2,7 @@ package darkhelmet.network.quartz.storage;
 
 import darkhelmet.network.quartz.config.CommandConfiguration;
 import darkhelmet.network.quartz.config.EventConfiguration;
+import darkhelmet.network.quartz.config.EventStateConfiguration;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,4 +29,16 @@ public interface IStorageAdapter {
      * @return The event, if one exists
      */
     Optional<EventConfiguration> getEvent(String key);
+
+    /**
+     * Get the event state object.
+     *
+     * @return The event state
+     */
+    EventStateConfiguration getState();
+
+    /**
+     * Save the state configuration.
+     */
+    void saveState();
 }

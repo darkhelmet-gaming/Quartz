@@ -17,127 +17,49 @@ public class Config {
     private Config() {}
 
     /**
-     * Get or create the plugin configuration files.
+     * Get or create a configuration file.
      *
-     * @param plugin The plugin
-     * @return The quartz configuration object
+     * @param clz The configuration class.
+     * @param file The file path we'll read/write to.
+     * @param <T> The configuration class type.
+     * @return The configuration class instance
      */
-    public static QuartzConfiguration getOrCreateQuartzConfiguration(Plugin plugin) {
-        File dataFolder = plugin.getDataFolder();
-
-        final HoconConfigurationLoader loader = HoconConfigurationLoader.builder()
-            .file(new File(dataFolder, "quartz.conf"))
-            .build();
-
-        try {
-            CommentedConfigurationNode root = loader.load();
-            final QuartzConfiguration config = root.get(QuartzConfiguration.class);
-            root.set(QuartzConfiguration.class, config);
-            loader.save(root);
-
-            return config;
-        } catch (final ConfigurateException e) {
-            Quartz.error("An error occurred while loading the quartz configuration: " + e.getMessage());
-            if (e.getCause() != null) {
-                e.getCause().printStackTrace();
-            }
-        }
-
-        return null;
+    public static <T> T getOrWriteConfiguration(Class<T> clz, File file) {
+        return getOrWriteConfiguration(clz, file, null);
     }
 
     /**
-     * Get or create the event state data files.
+     * Get or create a configuration file.
      *
-     * @param plugin The plugin
-     * @return The event state object
+     * @param clz The configuration class
+     * @param file The file path we'll read/write to
+     * @param config The existing config object to write
+     * @param <T> The configuration class type
+     * @return The configuration class instance
      */
-    public static EventStateConfiguration getOrCreateEventStateConfiguration(Plugin plugin) {
-        File cacheFolder = new File(plugin.getDataFolder(), "cache");
-
-        // If the lang directory doesn't exist, make it
-        if (!cacheFolder.exists()) {
-            cacheFolder.mkdir();
+    public static <T> T getOrWriteConfiguration(Class<T> clz, File file, T config) {
+        if (!file.exists()) {
+            file.getParentFile().mkdirs();
         }
 
         final HoconConfigurationLoader loader = HoconConfigurationLoader.builder()
-                .file(new File(cacheFolder, "event_state.conf"))
+                .file(file)
                 .build();
 
         try {
             CommentedConfigurationNode root = loader.load();
-            final EventStateConfiguration config = root.get(EventStateConfiguration.class);
-            root.set(EventStateConfiguration.class, config);
+
+            // If config is not provided, load it
+            if (config == null) {
+                config = root.get(clz);
+            }
+
+            root.set(clz, config);
             loader.save(root);
 
             return config;
         } catch (final ConfigurateException e) {
-            Quartz.error("An error occurred while loading the event state configuration: " + e.getMessage());
-            if (e.getCause() != null) {
-                e.getCause().printStackTrace();
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Get or create the event state data files.
-     *
-     * @param plugin The plugin
-     * @param config The event state config
-     */
-    public static void saveEventStateConfiguration(Plugin plugin, EventStateConfiguration config) {
-        File cacheFolder = new File(plugin.getDataFolder(), "cache");
-
-        // If the lang directory doesn't exist, make it
-        if (!cacheFolder.exists()) {
-            cacheFolder.mkdir();
-        }
-
-        final HoconConfigurationLoader loader = HoconConfigurationLoader.builder()
-                .file(new File(cacheFolder, "event_state.conf"))
-                .build();
-
-        try {
-            CommentedConfigurationNode root = loader.load();
-            root.set(EventStateConfiguration.class, config);
-            loader.save(root);
-        } catch (final ConfigurateException e) {
-            Quartz.error("An error occurred while loading the event state configuration: " + e.getMessage());
-            if (e.getCause() != null) {
-                e.getCause().printStackTrace();
-            }
-        }
-    }
-
-    /**
-     * Get or create the language configuration file.
-     *
-     * @param plugin The plugin
-     * @return The language configuration object
-     */
-    public static LanguageConfiguration getOrCreateLanguageConfiguration(Plugin plugin, String lang) {
-        File langFolder = new File(plugin.getDataFolder(), "lang");
-
-        // If the lang directory doesn't exist, make it
-        if (!langFolder.exists()) {
-            langFolder.mkdir();
-        }
-
-        final HoconConfigurationLoader loader = HoconConfigurationLoader.builder()
-                .file(new File(langFolder, lang + ".conf"))
-                .build();
-
-        try {
-            CommentedConfigurationNode root = loader.load();
-            final LanguageConfiguration config = root.get(LanguageConfiguration.class);
-            root.set(LanguageConfiguration.class, config);
-            loader.save(root);
-
-            return config;
-        } catch (final ConfigurateException e) {
-            Quartz.error("An error occurred while loading the lang configuration: " + e.getMessage());
+            Quartz.error("An error occurred while loading the configuration: " + e.getMessage());
             if (e.getCause() != null) {
                 e.getCause().printStackTrace();
             }

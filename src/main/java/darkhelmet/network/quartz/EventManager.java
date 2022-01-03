@@ -1,6 +1,5 @@
 package darkhelmet.network.quartz;
 
-import darkhelmet.network.quartz.config.Config;
 import darkhelmet.network.quartz.config.DisplayConfiguration;
 import darkhelmet.network.quartz.config.EventConfiguration;
 import darkhelmet.network.quartz.config.PhaseConfiguration;
@@ -30,7 +29,7 @@ public class EventManager {
      * @return If active
      */
     public static boolean isEventActive(EventConfiguration event) {
-        return Quartz.getInstance().eventStateConfig().activeEvents.contains(event.key());
+        return Quartz.getInstance().storageAdapter().getState().activeEvents.contains(event.key());
     }
 
     /**
@@ -131,13 +130,13 @@ public class EventManager {
      */
     public static boolean start(EventConfiguration event) {
         if (!isEventActive(event)) {
-            Quartz.getInstance().eventStateConfig().activeEvents.add(event.key());
+            Quartz.getInstance().storageAdapter().getState().activeEvents.add(event.key());
 
             showDisplays(event, EventPhase.START);
             runCommands(event, EventPhase.START);
             playSounds(event, EventPhase.START);
 
-            Config.saveEventStateConfiguration(Quartz.getInstance(), Quartz.getInstance().eventStateConfig());
+            Quartz.getInstance().storageAdapter().saveState();
 
             QuartzEventStart bukkitEvent = new QuartzEventStart(event);
             Bukkit.getServer().getPluginManager().callEvent(bukkitEvent);
@@ -156,13 +155,13 @@ public class EventManager {
      */
     public static boolean end(EventConfiguration event) {
         if (isEventActive(event)) {
-            Quartz.getInstance().eventStateConfig().activeEvents.remove(event.key());
+            Quartz.getInstance().storageAdapter().getState().activeEvents.remove(event.key());
 
             showDisplays(event, EventPhase.END);
             runCommands(event, EventPhase.END);
             playSounds(event, EventPhase.END);
 
-            Config.saveEventStateConfiguration(Quartz.getInstance(), Quartz.getInstance().eventStateConfig());
+            Quartz.getInstance().storageAdapter().saveState();
 
             QuartzEventEnd bukkitEvent = new QuartzEventEnd(event);
             Bukkit.getServer().getPluginManager().callEvent(bukkitEvent);
