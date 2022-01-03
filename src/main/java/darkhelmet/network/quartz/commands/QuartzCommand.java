@@ -8,15 +8,24 @@ import co.aikar.commands.annotation.Description;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.annotation.Values;
 
-import darkhelmet.network.quartz.*;
+import darkhelmet.network.quartz.EventManager;
+import darkhelmet.network.quartz.EventPhase;
+import darkhelmet.network.quartz.I18l;
+import darkhelmet.network.quartz.Messenger;
+import darkhelmet.network.quartz.Quartz;
 import darkhelmet.network.quartz.config.EventConfiguration;
-
-import org.bukkit.command.CommandSender;
 
 import java.util.Optional;
 
+import org.bukkit.command.CommandSender;
+
 @CommandAlias("quartz")
 public class QuartzCommand extends BaseCommand {
+    /**
+     * Reload configurations.
+     *
+     * @param sender The command sender
+     */
     @Subcommand("reload")
     @CommandPermission("quartz.admin")
     @Description("Reloads the configuration and events (and regenerates all event tasks)")
@@ -31,6 +40,12 @@ public class QuartzCommand extends BaseCommand {
         sender.sendMessage(Messenger.success(I18l.lang().reloadedEventsAndSchedules));
     }
 
+    /**
+     * Force start an event.
+     *
+     * @param sender The command sender
+     * @param eventKey The event key
+     */
     @Subcommand("forcestart")
     @CommandCompletion("@eventKeys")
     @CommandPermission("quartz.admin")
@@ -46,6 +61,12 @@ public class QuartzCommand extends BaseCommand {
         }
     }
 
+    /**
+     * Force end an event.
+     *
+     * @param sender The command sender
+     * @param eventKey The event key
+     */
     @Subcommand("forceend")
     @CommandCompletion("@eventKeys")
     @CommandPermission("quartz.admin")
@@ -61,6 +82,12 @@ public class QuartzCommand extends BaseCommand {
         }
     }
 
+    /**
+     * Simulate start phase of an event.
+     *
+     * @param sender The command sender
+     * @param eventKey The event key
+     */
     @Subcommand("simulatestart")
     @CommandCompletion("@eventKeys")
     @CommandPermission("quartz.admin")
@@ -76,6 +103,12 @@ public class QuartzCommand extends BaseCommand {
         }
     }
 
+    /**
+     * Simulate active phase of an event.
+     *
+     * @param sender The command sender
+     * @param eventKey The event key
+     */
     @Subcommand("simulateactive")
     @CommandCompletion("@eventKeys")
     @CommandPermission("quartz.admin")
@@ -91,6 +124,12 @@ public class QuartzCommand extends BaseCommand {
         }
     }
 
+    /**
+     * Simulate end phase of an event.
+     *
+     * @param sender The command sender
+     * @param eventKey The event key
+     */
     @Subcommand("simulateend")
     @CommandCompletion("@eventKeys")
     @CommandPermission("quartz.admin")

@@ -2,18 +2,19 @@ package darkhelmet.network.quartz.config;
 
 import darkhelmet.network.quartz.EventPhase;
 
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
-import org.spongepowered.configurate.objectmapping.meta.Comment;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.spongepowered.configurate.objectmapping.ConfigSerializable;
+import org.spongepowered.configurate.objectmapping.meta.Comment;
 
 @ConfigSerializable
 public class DisplayConfiguration {
     @Comment("Display type(s)")
     private List<String> types = new ArrayList<>();
 
-    @Comment("Template(s) to use during the defined phases for an event (applicable only if event uses this display type)\n" +
+    @Comment("Template(s) to use during the defined phases for an event\n" +
+            "(applicable only if event uses this display type)\n" +
             "Formatting code reference: https://docs.adventure.kyori.net/minimessage\n" +
             "For chat display, one template entry = one line.\n" +
             "For titles, the first template is the title and second is the subtitle.")
@@ -27,6 +28,11 @@ public class DisplayConfiguration {
 
     public DisplayConfiguration() {}
 
+    /**
+     * Construct a new display configuration.
+     *
+     * @param phase An event phase
+     */
     public DisplayConfiguration(EventPhase phase) {
         this();
 

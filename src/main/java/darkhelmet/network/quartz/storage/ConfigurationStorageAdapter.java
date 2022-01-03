@@ -9,10 +9,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ConfigurationStorageAdapter implements IStorageAdapter {
+    /**
+     * Cache of all commands.
+     */
     private final List<CommandConfiguration> commands;
 
     /**
-     * Cache of all events
+     * Cache of all events.
      */
     private final List<EventConfiguration> events;
 

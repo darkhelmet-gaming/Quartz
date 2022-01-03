@@ -1,12 +1,13 @@
 package darkhelmet.network.quartz.config;
 
 import darkhelmet.network.quartz.EventPhase;
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
-import org.spongepowered.configurate.objectmapping.meta.Comment;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.spongepowered.configurate.objectmapping.ConfigSerializable;
+import org.spongepowered.configurate.objectmapping.meta.Comment;
 
 @ConfigSerializable
 public class EventConfiguration {
@@ -112,6 +113,12 @@ public class EventConfiguration {
         return schedules.stream().filter(ScheduleConfiguration::enabled).collect(Collectors.toList());
     }
 
+    /**
+     * Get the phase configuration for the provided phase.
+     *
+     * @param phase The phase
+     * @return The phase configuration
+     */
     public PhaseConfiguration getPhase(EventPhase phase) {
         if (phase.equals(EventPhase.START)) {
             return start;

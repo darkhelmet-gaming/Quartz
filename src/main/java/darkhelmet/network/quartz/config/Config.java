@@ -2,16 +2,16 @@ package darkhelmet.network.quartz.config;
 
 import darkhelmet.network.quartz.Quartz;
 
-import org.bukkit.plugin.Plugin;
-import org.spongepowered.configurate.CommentedConfigurationNode;
-import org.spongepowered.configurate.ConfigurateException;
-import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+
+import org.bukkit.plugin.Plugin;
+import org.spongepowered.configurate.CommentedConfigurationNode;
+import org.spongepowered.configurate.ConfigurateException;
+import org.spongepowered.configurate.hocon.HoconConfigurationLoader;
 
 public class Config {
     private Config() {}
@@ -85,7 +85,7 @@ public class Config {
      * Get or create the event state data files.
      *
      * @param plugin The plugin
-     * @return The event state object
+     * @param config The event state config
      */
     public static void saveEventStateConfiguration(Plugin plugin, EventStateConfiguration config) {
         File cacheFolder = new File(plugin.getDataFolder(), "cache");

@@ -1,9 +1,9 @@
 package darkhelmet.network.quartz.config;
 
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 
 @ConfigSerializable
 public class EventStateConfiguration {

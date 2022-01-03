@@ -244,7 +244,7 @@
         <module name="OverloadMethodsDeclarationOrder"/>
         <module name="VariableDeclarationUsageDistance"/>
         <module name="ImportOrder">
-			<property name="groups" value="*,co,com,java,net,network,org"/>
+			<property name="groups" value="*,co,com,darkhelmet,java,me,net,network,org"/>
 			<property name="ordered" value="true"/>
 			<property name="separated" value="true"/>
 			<property name="option" value="bottom"/>
@@ -269,7 +269,7 @@
                     METHOD_DEF, QUESTION, RESOURCE_SPECIFICATION, SUPER_CTOR_CALL, LAMBDA"/>
         </module>
         <module name="OperatorWrap">
-            <property name="option" value="NL"/>
+            <property name="option" value="EOL"/>
             <property name="tokens"
              value="BAND, BOR, BSR, BXOR, DIV, EQUAL, GE, GT, LAND, LE, LITERAL_INSTANCEOF, LOR,
                     LT, MINUS, MOD, NOT_EQUAL, PLUS, QUESTION, SL, SR, STAR, METHOD_REF "/>

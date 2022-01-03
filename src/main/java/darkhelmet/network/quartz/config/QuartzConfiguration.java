@@ -2,12 +2,12 @@ package darkhelmet.network.quartz.config;
 
 import darkhelmet.network.quartz.EventPhase;
 
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
-import org.spongepowered.configurate.objectmapping.meta.Comment;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.spongepowered.configurate.objectmapping.ConfigSerializable;
+import org.spongepowered.configurate.objectmapping.meta.Comment;
 
 @ConfigSerializable
 public class QuartzConfiguration {
@@ -32,6 +32,9 @@ public class QuartzConfiguration {
     @Comment("Determines which language configuration file will be loaded from the 'langs' directory")
     private String language = "en_us";
 
+    /**
+     * Construct a new quartz configuration.
+     */
     public QuartzConfiguration() {
         // Add a sample command configuration
         commands.add(new CommandConfiguration());

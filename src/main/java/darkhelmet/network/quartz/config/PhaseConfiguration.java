@@ -1,10 +1,10 @@
 package darkhelmet.network.quartz.config;
 
-import org.spongepowered.configurate.objectmapping.ConfigSerializable;
-import org.spongepowered.configurate.objectmapping.meta.Comment;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.spongepowered.configurate.objectmapping.ConfigSerializable;
+import org.spongepowered.configurate.objectmapping.meta.Comment;
 
 @ConfigSerializable
 public class PhaseConfiguration {
@@ -15,6 +15,9 @@ public class PhaseConfiguration {
     @Comment("List all display types (by name) this phase will use.")
     private List<String> useDisplays = new ArrayList<>();
 
+    /**
+     * Construct a new phase configuration.
+     */
     public PhaseConfiguration() {
         commands.add("effect give %player_name% levitation 3 0");
 

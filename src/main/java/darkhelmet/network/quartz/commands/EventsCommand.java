@@ -11,12 +11,17 @@ import darkhelmet.network.quartz.Messenger;
 import darkhelmet.network.quartz.Quartz;
 import darkhelmet.network.quartz.config.EventConfiguration;
 
-import org.bukkit.command.CommandSender;
-
 import java.util.List;
+
+import org.bukkit.command.CommandSender;
 
 @CommandAlias("events")
 public class EventsCommand extends BaseCommand {
+    /**
+     * List active events.
+     *
+     * @param sender The command sender
+     */
     @Subcommand("active")
     @Description("Lists all currently active events")
     @CommandPermission("quartz.events.active")

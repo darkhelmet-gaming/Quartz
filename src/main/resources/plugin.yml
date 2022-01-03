@@ -1,8 +1,15 @@
 name: Quartz
 version: 1.0.0
 description:
-authors: [Mike Botsko]
+authors: [viveleroi]
 website:
-api-version: 1.17
+api-version: 1.18
 main: darkhelmet.network.quartz.Quartz
 depend: [PlaceholderAPI]
+commands:
+  events:
+    description: Lists events
+    usage: /events
+  quartz:
+    description: Manage events
+    usage: /quartz

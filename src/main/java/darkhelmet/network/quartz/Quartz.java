@@ -8,6 +8,24 @@ import com.cronutils.model.definition.CronDefinition;
 import com.cronutils.model.definition.CronDefinitionBuilder;
 import com.cronutils.model.time.ExecutionTime;
 import com.cronutils.parser.CronParser;
+import com.google.common.collect.ImmutableList;
+
+import darkhelmet.network.quartz.commands.EventsCommand;
+import darkhelmet.network.quartz.commands.IfEventCommand;
+import darkhelmet.network.quartz.commands.QuartzCommand;
+import darkhelmet.network.quartz.config.CommandConfiguration;
+import darkhelmet.network.quartz.config.Config;
+import darkhelmet.network.quartz.config.EventConfiguration;
+import darkhelmet.network.quartz.config.EventStateConfiguration;
+import darkhelmet.network.quartz.config.LanguageConfiguration;
+import darkhelmet.network.quartz.config.QuartzConfiguration;
+import darkhelmet.network.quartz.config.ScheduleConfiguration;
+import darkhelmet.network.quartz.jobs.QuartzCommandJob;
+import darkhelmet.network.quartz.jobs.QuartzEndJob;
+import darkhelmet.network.quartz.jobs.QuartzStartJob;
+import darkhelmet.network.quartz.listeners.PlayerJoinListener;
+import darkhelmet.network.quartz.storage.ConfigurationStorageAdapter;
+import darkhelmet.network.quartz.storage.IStorageAdapter;
 
 import java.io.IOException;
 import java.time.ZonedDateTime;
@@ -16,18 +34,6 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-
-import com.google.common.collect.ImmutableList;
-import darkhelmet.network.quartz.commands.EventsCommand;
-import darkhelmet.network.quartz.commands.IfEventCommand;
-import darkhelmet.network.quartz.commands.QuartzCommand;
-import darkhelmet.network.quartz.config.*;
-import darkhelmet.network.quartz.jobs.QuartzCommandJob;
-import darkhelmet.network.quartz.jobs.QuartzEndJob;
-import darkhelmet.network.quartz.jobs.QuartzStartJob;
-import darkhelmet.network.quartz.listeners.PlayerJoinListener;
-import darkhelmet.network.quartz.storage.ConfigurationStorageAdapter;
-import darkhelmet.network.quartz.storage.IStorageAdapter;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import org.quartz.CronScheduleBuilder;
@@ -130,7 +136,8 @@ public class Quartz extends JavaPlugin {
             PaperCommandManager manager = new PaperCommandManager(this);
             manager.enableUnstableAPI("help");
 
-            List<String> eventKeys = storageAdapter.getEnabledEvents().stream().map(event -> event.key().toLowerCase()).toList();
+            List<String> eventKeys = storageAdapter.getEnabledEvents().stream()
+                .map(event -> event.key().toLowerCase()).toList();
             manager.getCommandCompletions().registerCompletion("eventKeys", c -> ImmutableList.copyOf(eventKeys));
 
             manager.registerCommand(new EventsCommand());
@@ -339,7 +346,8 @@ public class Quartz extends JavaPlugin {
      * @return The list of active events
      */
     public List<EventConfiguration> getActiveEvents() {
-        return storageAdapter().getEnabledEvents().stream().filter(EventManager::isEventActive).collect(Collectors.toList());
+        return storageAdapter().getEnabledEvents().stream()
+            .filter(EventManager::isEventActive).collect(Collectors.toList());
     }
 
     /**

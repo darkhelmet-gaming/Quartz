@@ -5,7 +5,7 @@ import darkhelmet.network.quartz.config.EventConfiguration;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-abstract public class QuartzEvent extends Event {
+public abstract class QuartzEvent extends Event {
     /**
      * The handlers.
      */
@@ -37,7 +37,7 @@ abstract public class QuartzEvent extends Event {
     /**
      * Get the handlers.
      *
-     * Required by bukkit for proper event handling.
+     * <p>Required by bukkit for proper event handling.</p>
      *
      * @return The handlers
      */
@@ -48,7 +48,7 @@ abstract public class QuartzEvent extends Event {
     /**
      * Get the handlers list.
      *
-     * Required by bukkit for proper event handling.
+     * <p>Required by bukkit for proper event handling.</p>
      *
      * @return The handlers
      */

@@ -8,6 +8,10 @@ import darkhelmet.network.quartz.config.QuartzConfiguration;
 import darkhelmet.network.quartz.events.QuartzEventEnd;
 import darkhelmet.network.quartz.events.QuartzEventStart;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import me.clip.placeholderapi.PlaceholderAPI;
 
 import net.kyori.adventure.text.Component;
@@ -16,17 +20,26 @@ import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 public class EventManager {
     private EventManager() {}
 
+    /**
+     * Check if an event is currently active.
+     *
+     * @param event The event
+     * @return If active
+     */
     public static boolean isEventActive(EventConfiguration event) {
         return Quartz.getInstance().eventStateConfig().activeEvents.contains(event.key());
     }
 
+    /**
+     * Get a final map of displays for an event/phase.
+     *
+     * @param event The event
+     * @param phase The phase
+     * @return A map of displays
+     */
     private static Map<String, DisplayConfiguration> getDisplays(EventConfiguration event, EventPhase phase) {
         QuartzConfiguration config = Quartz.getInstance().quartzConfig();
 
@@ -81,10 +94,22 @@ public class EventManager {
         return displays;
     }
 
+    /**
+     * Show displays on for a specific event/phase. Does not active the event or run commands.
+     *
+     * @param event The event
+     * @param phase The phase
+     */
     public static void simulatePhase(EventConfiguration event, EventPhase phase) {
         showDisplays(event, phase);
     }
 
+    /**
+     * Runs all "active" phase displays/commands for an event.
+     *
+     * @param event The event
+     * @return Whether the event is active
+     */
     public static boolean active(EventConfiguration event) {
         if (isEventActive(event)) {
             showDisplays(event, EventPhase.ACTIVE);
@@ -96,6 +121,12 @@ public class EventManager {
         return false;
     }
 
+    /**
+     * Runs all "start" phase displays/commands for an event.
+     *
+     * @param event Tne event
+     * @return Whether the event can start
+     */
     public static boolean start(EventConfiguration event) {
         if (!isEventActive(event)) {
             Quartz.getInstance().eventStateConfig().activeEvents.add(event.key());
@@ -114,6 +145,12 @@ public class EventManager {
         return false;
     }
 
+    /**
+     * Runs all "end" phase displays/commands for an event.
+     *
+     * @param event Tne event
+     * @return Whether the event can end
+     */
     public static boolean end(EventConfiguration event) {
         if (isEventActive(event)) {
             Quartz.getInstance().eventStateConfig().activeEvents.remove(event.key());
@@ -132,6 +169,12 @@ public class EventManager {
         return false;
     }
 
+    /**
+     * Runs all commands for event/phase.
+     *
+     * @param event The event
+     * @param phase The phase
+     */
     private static void runCommands(EventConfiguration event, EventPhase phase) {
         for (String command : event.getPhase(phase).commands()) {
             Quartz.getInstance().debug(String.format("Running command for event [%s]: %s",
@@ -156,6 +199,11 @@ public class EventManager {
         }
     }
 
+    /**
+     * Runs a command.
+     *
+     * @param command The command
+     */
     public static void runCommand(String command) {
         Quartz.getInstance().debug(String.format("Running command: %s", command));
 
@@ -165,6 +213,12 @@ public class EventManager {
         });
     }
 
+    /**
+     * Show displays for the given event/phase.
+     *
+     * @param event The event
+     * @param phase The phase
+     */
     public static void showDisplays(EventConfiguration event, EventPhase phase) {
         Map<String, DisplayConfiguration> displays = getDisplays(event, phase);
 
@@ -177,6 +231,12 @@ public class EventManager {
         }
     }
 
+    /**
+     * Show a chat message for an event.
+     *
+     * @param event The event
+     * @param display The display
+     */
     private static void showChatMessage(EventConfiguration event, DisplayConfiguration display) {
         if (!display.templates().isEmpty()) {
             for (Player player : Bukkit.getOnlinePlayers()) {
@@ -189,6 +249,12 @@ public class EventManager {
         }
     }
 
+    /**
+     * Show a title/subtitle for an event.
+     *
+     * @param event The event
+     * @param display The display
+     */
     private static void showTitle(EventConfiguration event, DisplayConfiguration display) {
         String titleStr = "";
         String subtitleStr = "";
