@@ -29,7 +29,7 @@ repositories {
 
 group = project.property("group")
 version = project.property("version")
-targetCompatibility = sourceCompatibility = JavaVersion.VERSION_16
+targetCompatibility = sourceCompatibility = JavaVersion.VERSION_17
 
 dependencies {
     compileOnly 'io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT'
