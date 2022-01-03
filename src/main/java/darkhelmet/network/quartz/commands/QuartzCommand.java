@@ -17,7 +17,9 @@ import darkhelmet.network.quartz.config.EventConfiguration;
 
 import java.util.Optional;
 
+import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 @CommandAlias("quartz")
 public class QuartzCommand extends BaseCommand {
@@ -143,5 +145,14 @@ public class QuartzCommand extends BaseCommand {
 
             sender.sendMessage(Messenger.message(String.format(I18l.lang().simulatingEventEnd, event.name())));
         }
+    }
+
+    @Subcommand("testsound")
+    @CommandCompletion("@sounds")
+    @CommandPermission("quartz.admin")
+    @Description("Plays a sound.")
+    public void onTestSound(Player player, @Values("@sounds") String soundKey) {
+        Sound sound = Sound.valueOf(soundKey.toUpperCase());
+        player.playSound(player.getLocation(), sound, 1, 1);
     }
 }

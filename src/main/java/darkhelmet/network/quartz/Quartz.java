@@ -29,12 +29,14 @@ import darkhelmet.network.quartz.storage.IStorageAdapter;
 
 import java.io.IOException;
 import java.time.ZonedDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import org.bukkit.Sound;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
@@ -139,6 +141,10 @@ public class Quartz extends JavaPlugin {
             List<String> eventKeys = storageAdapter.getEnabledEvents().stream()
                 .map(event -> event.key().toLowerCase()).toList();
             manager.getCommandCompletions().registerCompletion("eventKeys", c -> ImmutableList.copyOf(eventKeys));
+
+            List<String> soundKeys = Arrays.stream(Sound.values())
+                .map(sound -> sound.toString().toLowerCase()).collect(Collectors.toList());
+            manager.getCommandCompletions().registerCompletion("sounds", c -> ImmutableList.copyOf(soundKeys));
 
             manager.registerCommand(new EventsCommand());
             manager.registerCommand(new IfEventCommand());

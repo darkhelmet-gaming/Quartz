@@ -95,13 +95,14 @@ public class EventManager {
     }
 
     /**
-     * Show displays on for a specific event/phase. Does not active the event or run commands.
+     * Show displays/play sounds on for a specific event/phase. Does not active the event or run commands.
      *
      * @param event The event
      * @param phase The phase
      */
     public static void simulatePhase(EventConfiguration event, EventPhase phase) {
         showDisplays(event, phase);
+        playSounds(event, phase);
     }
 
     /**
@@ -114,6 +115,7 @@ public class EventManager {
         if (isEventActive(event)) {
             showDisplays(event, EventPhase.ACTIVE);
             runCommands(event, EventPhase.ACTIVE);
+            playSounds(event, EventPhase.ACTIVE);
 
             return true;
         }
@@ -133,6 +135,7 @@ public class EventManager {
 
             showDisplays(event, EventPhase.START);
             runCommands(event, EventPhase.START);
+            playSounds(event, EventPhase.START);
 
             Config.saveEventStateConfiguration(Quartz.getInstance(), Quartz.getInstance().eventStateConfig());
 
@@ -157,6 +160,7 @@ public class EventManager {
 
             showDisplays(event, EventPhase.END);
             runCommands(event, EventPhase.END);
+            playSounds(event, EventPhase.END);
 
             Config.saveEventStateConfiguration(Quartz.getInstance(), Quartz.getInstance().eventStateConfig());
 
@@ -228,6 +232,24 @@ public class EventManager {
 
         if (displays.containsKey("chat")) {
             showChatMessage(event, displays.get("chat"));
+        }
+    }
+
+    /**
+     * Play sounds for an event/phase.
+     *
+     * @param event The event
+     * @param phase The phase
+     */
+    public static void playSounds(EventConfiguration event, EventPhase phase) {
+        PhaseConfiguration phaseConfig = event.getPhase(phase);
+
+        if (phaseConfig.sound() != null) {
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                if (event.permission().equalsIgnoreCase("false") || player.hasPermission(event.permission())) {
+                    player.playSound(player.getLocation(), phaseConfig.sound(), 1, 1);
+                }
+            }
         }
     }
 
