@@ -81,6 +81,11 @@ public class Quartz extends JavaPlugin {
     private LanguageConfiguration langConfig;
 
     /**
+     * The messenger.
+     */
+    private OutputFormatter outputFormatter;
+
+    /**
      * The scheduler.
      */
     private Scheduler scheduler;
@@ -172,6 +177,7 @@ public class Quartz extends JavaPlugin {
         File langFile = new File(getDataFolder(), "lang/" + quartzConfig.language() + ".conf");
         langConfig = Config.getOrWriteConfiguration(LanguageConfiguration.class, langFile);
 
+        outputFormatter = new OutputFormatter(quartzConfig.output());
         storageAdapter = new ConfigurationStorageAdapter(quartzConfig);
     }
 
@@ -200,6 +206,15 @@ public class Quartz extends JavaPlugin {
      */
     public LanguageConfiguration langConfig() {
         return langConfig;
+    }
+
+    /**
+     * Get the messenger.
+     *
+     * @return The messenger
+     */
+    public OutputFormatter messenger() {
+        return outputFormatter;
     }
 
     /**

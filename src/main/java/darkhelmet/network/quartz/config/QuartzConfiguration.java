@@ -32,6 +32,9 @@ public class QuartzConfiguration {
     @Comment("Determines which language configuration file will be loaded from the 'langs' directory")
     private String language = "en_us";
 
+    @Comment("Configure the format of command output.")
+    private OutputConfiguration output = new OutputConfiguration();
+
     /**
      * Construct a new quartz configuration.
      */
@@ -65,6 +68,10 @@ public class QuartzConfiguration {
 
     public String language() {
         return language;
+    }
+
+    public OutputConfiguration output() {
+        return output;
     }
 
     public List<DisplayConfiguration> getDisplaysForPhase(EventPhase phase) {
