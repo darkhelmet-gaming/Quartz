@@ -11,6 +11,6 @@ public class LanguageConfiguration {
     public String simulatingEventActive = "Simulating active phase for event %s";
     public String simulatingEventEnd = "Simulating end for event %s";
     public String noActiveEvents = "There are no active events.";
-    public String listHeading = "Listing %s";
+    public String listHeading = "Listing";
     public String activeEvents = "Active Events";
 }

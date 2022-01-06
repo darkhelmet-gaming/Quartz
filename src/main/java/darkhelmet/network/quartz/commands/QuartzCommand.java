@@ -10,9 +10,9 @@ import co.aikar.commands.annotation.Values;
 
 import darkhelmet.network.quartz.EventManager;
 import darkhelmet.network.quartz.EventPhase;
-import darkhelmet.network.quartz.I18l;
 import darkhelmet.network.quartz.Quartz;
 import darkhelmet.network.quartz.config.EventConfiguration;
+import darkhelmet.network.quartz.formatters.I18l;
 
 import java.util.Optional;
 

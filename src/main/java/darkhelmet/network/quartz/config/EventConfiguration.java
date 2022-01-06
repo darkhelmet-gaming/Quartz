@@ -1,9 +1,15 @@
 package darkhelmet.network.quartz.config;
 
-import darkhelmet.network.quartz.EventPhase;
+import com.cronutils.model.Cron;
+import com.cronutils.model.time.ExecutionTime;
 
+import darkhelmet.network.quartz.EventPhase;
+import darkhelmet.network.quartz.Quartz;
+
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
@@ -111,6 +117,28 @@ public class EventConfiguration {
      */
     public List<ScheduleConfiguration> getEnabledSchedules() {
         return schedules.stream().filter(ScheduleConfiguration::enabled).collect(Collectors.toList());
+    }
+
+    /**
+     * Get the next end execution, if any.
+     *
+     * @return The next end execution, if any
+     */
+    public Optional<ZonedDateTime> getNextEndExecution() {
+        ZonedDateTime soonestNextExec = null;
+        for (ScheduleConfiguration schedule : getEnabledSchedules()) {
+            Cron endCron = Quartz.getInstance().cronParser().parse(schedule.ends());
+
+            ZonedDateTime now = ZonedDateTime.now();
+            Optional<ZonedDateTime> nextExecution = ExecutionTime.forCron(endCron).nextExecution(now);
+
+            if (nextExecution.isPresent() &&
+                    (soonestNextExec == null || nextExecution.get().isBefore(soonestNextExec))) {
+                soonestNextExec = nextExecution.get();
+            }
+        }
+
+        return Optional.ofNullable(soonestNextExec);
     }
 
     /**

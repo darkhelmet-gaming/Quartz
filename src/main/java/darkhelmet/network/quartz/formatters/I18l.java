@@ -1,5 +1,6 @@
-package darkhelmet.network.quartz;
+package darkhelmet.network.quartz.formatters;
 
+import darkhelmet.network.quartz.Quartz;
 import darkhelmet.network.quartz.config.LanguageConfiguration;
 
 public class I18l {

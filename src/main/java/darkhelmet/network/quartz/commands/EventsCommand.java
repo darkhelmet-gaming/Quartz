@@ -6,9 +6,9 @@ import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Description;
 import co.aikar.commands.annotation.Subcommand;
 
-import darkhelmet.network.quartz.I18l;
 import darkhelmet.network.quartz.Quartz;
 import darkhelmet.network.quartz.config.EventConfiguration;
+import darkhelmet.network.quartz.formatters.I18l;
 
 import java.util.List;
 
@@ -34,10 +34,10 @@ public class EventsCommand extends BaseCommand {
         }
 
         sender.sendMessage(Quartz.getInstance().messenger()
-            .info(String.format(I18l.lang().listHeading, I18l.lang().activeEvents)));
+            .heading(I18l.lang().listHeading, I18l.lang().activeEvents));
 
         for (EventConfiguration event : events) {
-            sender.sendMessage(event.name());
+            sender.sendMessage(Quartz.getInstance().messenger().activeEventListEntry(event));
         }
     }
 }

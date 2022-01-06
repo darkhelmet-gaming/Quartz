@@ -1,4 +1,4 @@
-package darkhelmet.network.quartz;
+package darkhelmet.network.quartz.formatters;
 
 import darkhelmet.network.quartz.config.EventConfiguration;
 
@@ -12,8 +12,8 @@ import net.kyori.adventure.text.minimessage.Template;
 
 import org.bukkit.entity.Player;
 
-public class Formatter {
-    private Formatter() {}
+public class EventFormatter {
+    private EventFormatter() {}
 
     /**
      * Formats a message given an event.

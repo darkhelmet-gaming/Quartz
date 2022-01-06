@@ -19,6 +19,7 @@ import darkhelmet.network.quartz.config.EventConfiguration;
 import darkhelmet.network.quartz.config.LanguageConfiguration;
 import darkhelmet.network.quartz.config.QuartzConfiguration;
 import darkhelmet.network.quartz.config.ScheduleConfiguration;
+import darkhelmet.network.quartz.formatters.OutputFormatter;
 import darkhelmet.network.quartz.jobs.QuartzCommandJob;
 import darkhelmet.network.quartz.jobs.QuartzEndJob;
 import darkhelmet.network.quartz.jobs.QuartzStartJob;
