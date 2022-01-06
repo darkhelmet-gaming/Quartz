@@ -25,7 +25,7 @@ public class EventsCommand extends BaseCommand {
     @Subcommand("active")
     @CommandAlias("activeevents")
     @Description("Lists all currently active events")
-    @CommandPermission("quartz.events.active")
+    @CommandPermission("quartz.events.list.active")
     public void onActiveEvents(CommandSender sender) {
         List<EventConfiguration> events = Quartz.getInstance().getActiveEvents();
 
@@ -50,7 +50,7 @@ public class EventsCommand extends BaseCommand {
      */
     @Default
     @Description("Lists all currently enabled events")
-    @CommandPermission("quartz.events.active")
+    @CommandPermission("quartz.events.list")
     public void onEvents(CommandSender sender) {
         List<EventConfiguration> events = Quartz.getInstance().quartzConfig().getEnabledEvents();
 
