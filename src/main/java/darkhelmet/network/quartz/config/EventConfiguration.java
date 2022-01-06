@@ -120,6 +120,28 @@ public class EventConfiguration {
     }
 
     /**
+     * Get the next start execution, if any.
+     *
+     * @return The next start execution, if any
+     */
+    public Optional<ZonedDateTime> getNextStartExecution() {
+        ZonedDateTime soonestNextExec = null;
+        for (ScheduleConfiguration schedule : getEnabledSchedules()) {
+            Cron endCron = Quartz.getInstance().cronParser().parse(schedule.starts());
+
+            ZonedDateTime now = ZonedDateTime.now();
+            Optional<ZonedDateTime> nextExecution = ExecutionTime.forCron(endCron).nextExecution(now);
+
+            if (nextExecution.isPresent() &&
+                    (soonestNextExec == null || nextExecution.get().isBefore(soonestNextExec))) {
+                soonestNextExec = nextExecution.get();
+            }
+        }
+
+        return Optional.ofNullable(soonestNextExec);
+    }
+
+    /**
      * Get the next end execution, if any.
      *
      * @return The next end execution, if any

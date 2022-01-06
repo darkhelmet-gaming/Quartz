@@ -12,8 +12,8 @@ import net.kyori.adventure.text.minimessage.Template;
 
 import org.bukkit.entity.Player;
 
-public class EventFormatter {
-    private EventFormatter() {}
+public class DisplayFormatter {
+    private DisplayFormatter() {}
 
     /**
      * Formats a message given an event.

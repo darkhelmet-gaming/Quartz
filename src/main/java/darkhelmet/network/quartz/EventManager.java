@@ -6,7 +6,7 @@ import darkhelmet.network.quartz.config.PhaseConfiguration;
 import darkhelmet.network.quartz.config.QuartzConfiguration;
 import darkhelmet.network.quartz.events.QuartzEventEnd;
 import darkhelmet.network.quartz.events.QuartzEventStart;
-import darkhelmet.network.quartz.formatters.EventFormatter;
+import darkhelmet.network.quartz.formatters.DisplayFormatter;
 
 import java.util.HashMap;
 import java.util.List;
@@ -264,7 +264,7 @@ public class EventManager {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 if (event.permission().equalsIgnoreCase("false") || player.hasPermission(event.permission())) {
                     for (String rawMessage : display.templates()) {
-                        player.sendMessage(EventFormatter.format(player, event, rawMessage));
+                        player.sendMessage(DisplayFormatter.format(player, event, rawMessage));
                     }
                 }
             }
@@ -293,8 +293,8 @@ public class EventManager {
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (event.permission().equalsIgnoreCase("false") || player.hasPermission(event.permission())) {
                 // Build the title/components
-                Component mainTitle = EventFormatter.format(player, event, titleStr);
-                Component subTitle = EventFormatter.format(player, event, subtitleStr);
+                Component mainTitle = DisplayFormatter.format(player, event, titleStr);
+                Component subTitle = DisplayFormatter.format(player, event, subtitleStr);
                 Title title = Title.title(mainTitle, subTitle);
 
                 player.showTitle(title);

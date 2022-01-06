@@ -113,15 +113,44 @@ public class OutputFormatter {
     }
 
     /**
-     * Format a chat message for an event configuration.
+     * Format a chat message for an active event configuration.
      *
      * @param event The event
      * @return The formatted component
      */
     public Component activeEventListEntry(EventConfiguration event) {
+        return eventListEntry(outputConfiguration.activeEventListEntry(), event);
+    }
+
+    /**
+     * Format a chat message for an event configuration.
+     *
+     * @param event The event
+     * @return The formatted component
+     */
+    public Component eventListEntry(EventConfiguration event) {
+        return eventListEntry(outputConfiguration.eventListEntry(), event);
+    }
+
+    /**
+     * Format a chat message for an event configuration.
+     *
+     * @param template The config template to use
+     * @param event The event
+     * @return The formatted component
+     */
+    private Component eventListEntry(String template, EventConfiguration event) {
         Template prefixTemplate = Template.of("prefix", prefix);
         Template eventNameTemplate = Template.of("eventName", event.name());
         Template eventDescTemplate = Template.of("eventDescription", event.description());
+
+        String nextStartStr = "";
+        Optional<ZonedDateTime> nextStart = event.getNextStartExecution();
+        if (nextStart.isPresent()) {
+            nextStartStr = nextStart.get().format(dateTimeFormatter);
+        }
+
+        Template nextStartTemplate = Template.of("nextStart", nextStartStr);
 
         String nextEndStr = "";
         Optional<ZonedDateTime> nextEnd = event.getNextEndExecution();
@@ -131,7 +160,12 @@ public class OutputFormatter {
 
         Template nextEndTemplate = Template.of("nextEnd", nextEndStr);
 
-        List<Template> templates = List.of(prefixTemplate, eventNameTemplate, eventDescTemplate, nextEndTemplate);
-        return MiniMessage.get().parse(outputConfiguration.activeEventListEntry(), templates);
+        List<Template> templates = List.of(
+            prefixTemplate,
+            eventNameTemplate,
+            eventDescTemplate,
+            nextStartTemplate,
+            nextEndTemplate);
+        return MiniMessage.get().parse(template, templates);
     }
 }

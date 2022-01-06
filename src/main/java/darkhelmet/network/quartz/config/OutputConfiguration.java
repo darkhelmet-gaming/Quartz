@@ -23,9 +23,15 @@ public class OutputConfiguration {
     @Comment("Configure the date format used in output where are used. Refer to java's DateFormatter for syntax.")
     private String date = "eee MMMM dd yyyy hh:mm a Z";
 
-    @Comment("Used for the heading message before outputting a list (of events, etc).")
+    @Comment("Configure active event entry formats when used in list output.")
     private String activeEventListEntry = "<green><eventName>\n" +
             "      <yellow><eventDescription>\n" +
+            "      <gray>Ends: <white><nextEnd>";
+
+    @Comment("Configure event entry formats when used in list output.")
+    private String eventListEntry = "<green><eventName>\n" +
+            "      <yellow><eventDescription>\n" +
+            "      <gray>Starts: <white><nextStart>\n" +
             "      <gray>Ends: <white><nextEnd>";
 
     public String prefix() {
@@ -54,5 +60,9 @@ public class OutputConfiguration {
 
     public String activeEventListEntry() {
         return activeEventListEntry;
+    }
+
+    public String eventListEntry() {
+        return eventListEntry;
     }
 }

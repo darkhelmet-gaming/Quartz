@@ -77,4 +77,13 @@ public class QuartzConfiguration {
     public List<DisplayConfiguration> getDisplaysForPhase(EventPhase phase) {
         return displays.stream().filter(display -> display.phases().contains(phase)).collect(Collectors.toList());
     }
+
+    /**
+     * Get a list of all enabled events.
+     *
+     * @return All enabled events
+     */
+    public List<EventConfiguration> getEnabledEvents() {
+        return events.stream().filter(EventConfiguration::enabled).collect(Collectors.toList());
+    }
 }
