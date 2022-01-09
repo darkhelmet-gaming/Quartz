@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 buildscript {
     dependencies {
         classpath group: 'com.github.rodionmoiseev.gradle.plugins', name: 'idea-utils', version: '0.2'
@@ -13,6 +15,13 @@ apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'idea-utils'
 apply plugin: 'checkstyle'
+
+processResources {
+    filter ReplaceTokens, tokens: [
+        "apiversion": project.property("apiversion"),
+        "version"   : project.property("version")
+    ]
+}
 
 repositories {
     mavenLocal()

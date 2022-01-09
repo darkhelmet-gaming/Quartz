@@ -1,9 +1,9 @@
 name: Quartz
-version: 1.0.0
+version: @version@
 description:
 authors: [viveleroi]
 website:
-api-version: 1.18
+api-version: @apiversion@
 main: darkhelmet.network.quartz.Quartz
 depend: [PlaceholderAPI]
 commands:
