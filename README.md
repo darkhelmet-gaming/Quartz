@@ -25,7 +25,7 @@ Created by viveleroi for the `play.darkhelmet.network` Minecraft server.
 
 # The ifevent Command
 
-Any plugins that support running commands can take advantage of events. All you need to is prefix a command
+Any plugins that support running commands can take advantage of events. You simply need to prefix a command
 with the `ifevent` syntax below. If the given event is active, the provided command will execute. If the event
 is not active, the command will not run.
 
