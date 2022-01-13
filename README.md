@@ -23,6 +23,35 @@ Created by viveleroi for the `play.darkhelmet.network` Minecraft server.
 - `quartz simulateend [eventKey]` - Simulate the end of an event. Shows any in-game displays but does not run commands.
 - `quartz reload` - Reloads configuration files.
 
+# The ifevent Command
+
+Any plugins that support running commands can take advantage of events. All you need to is prefix a command
+with the `ifevent` syntax below. If the given event is active, the provided command will execute. If the event
+is not active, the command will not run.
+
+`ifevent [eventKey] [command]`
+
+For example, say you give users a vote key when they vote. In your vote plugin you might have something like
+this:
+
+```
+vote-rewards:
+  commands:
+  - givekey Vote %player_name%
+```
+
+You can add an entry using ifevent that will give them a second key *only* when the event is active:
+
+```
+vote-rewards:
+  commands:
+  - givekey Vote %player_name%
+  - ifevent doubleVoteDay givekey Vote %player_name%
+```
+
+If the event `doubleVoteDay` is active (the current time is between a scheduled start and end time),
+the command will be run and the user will get a second key.
+
 # Permissions
 
 - `quartz.events.list.active` - List currently active events.
