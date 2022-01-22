@@ -4,7 +4,7 @@ description:
 authors: [viveleroi]
 website:
 api-version: @apiversion@
-main: darkhelmet.network.quartz.Quartz
+main: network.darkhelmet.quartz.Quartz
 depend: [PlaceholderAPI]
 commands:
   events:

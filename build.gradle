@@ -73,9 +73,9 @@ shadowJar {
     relocate 'co.aikar.locales', 'network.darkhelmet.quartz.locales'
     relocate 'co.aikar.idb', 'network.darkhelmet.quartz.idb'
     relocate 'org.quartz-scheduler', 'network.darkhelmet.quartz-scheduler'
-    relocate 'com.cronutils', 'network.darkhelmet.cronutils'
-    relocate 'org.spongepowered', 'network.darkhelmet.spongepowered'
-    relocate 'net.kyori.adventure.text.minimessage', 'network.darkhelmet.minimessage'
+    relocate 'com.cronutils', 'network.darkhelmet.quartz.cronutils'
+    relocate 'org.spongepowered', 'network.darkhelmet.quartz.spongepowered'
+    relocate 'net.kyori.adventure.text.minimessage', 'network.darkhelmet.quartz.minimessage'
 }
 
 runServer {
