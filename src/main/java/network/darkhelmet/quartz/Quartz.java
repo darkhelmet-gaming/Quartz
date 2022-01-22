@@ -20,6 +20,8 @@ import java.util.Properties;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+
 import network.darkhelmet.quartz.commands.EventsCommand;
 import network.darkhelmet.quartz.commands.IfEventCommand;
 import network.darkhelmet.quartz.commands.QuartzCommand;
@@ -65,6 +67,11 @@ public class Quartz extends JavaPlugin {
      * The logger.
      */
     private static final Logger log = Logger.getLogger("Minecraft");
+
+    /**
+     * The bukkit audience.
+     */
+    private BukkitAudiences audiences;
 
     /**
      * The cron parser.
@@ -135,6 +142,8 @@ public class Quartz extends JavaPlugin {
         loadConfigurations();
 
         if (isEnabled()) {
+            audiences = BukkitAudiences.create(this);
+
             // Initialize and configure the command system
             BukkitCommandManager manager = new BukkitCommandManager(this);
             manager.enableUnstableAPI("help");
@@ -180,6 +189,15 @@ public class Quartz extends JavaPlugin {
 
         outputFormatter = new OutputFormatter(quartzConfig.output());
         storageAdapter = new ConfigurationStorageAdapter(quartzConfig);
+    }
+
+    /**
+     * Get the audiences.
+     *
+     * @return The audiences
+     */
+    public BukkitAudiences audiences() {
+        return audiences;
     }
 
     /**

@@ -264,7 +264,8 @@ public class EventManager {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 if (event.permission().equalsIgnoreCase("false") || player.hasPermission(event.permission())) {
                     for (String rawMessage : display.templates()) {
-                        player.sendMessage(DisplayFormatter.format(player, event, rawMessage));
+                        Component message = DisplayFormatter.format(player, event, rawMessage);
+                        Quartz.getInstance().audiences().player(player).sendMessage(message);
                     }
                 }
             }
@@ -297,7 +298,7 @@ public class EventManager {
                 Component subTitle = DisplayFormatter.format(player, event, subtitleStr);
                 Title title = Title.title(mainTitle, subTitle);
 
-                player.showTitle(title);
+                Quartz.getInstance().audiences().player(player).showTitle(title);
             }
         }
     }

@@ -9,6 +9,8 @@ import co.aikar.commands.annotation.Subcommand;
 
 import java.util.List;
 
+import net.kyori.adventure.text.Component;
+
 import network.darkhelmet.quartz.Quartz;
 import network.darkhelmet.quartz.config.EventConfiguration;
 import network.darkhelmet.quartz.formatters.I18l;
@@ -30,16 +32,19 @@ public class EventsCommand extends BaseCommand {
         List<EventConfiguration> events = Quartz.getInstance().getActiveEvents();
 
         if (events.isEmpty()) {
-            sender.sendMessage(Quartz.getInstance().messenger().error(I18l.lang().noActiveEvents));
+            Component message = Quartz.getInstance().messenger().error(I18l.lang().noActiveEvents);
+            Quartz.getInstance().audiences().sender(sender).sendMessage(message);
 
             return;
         }
 
-        sender.sendMessage(Quartz.getInstance().messenger()
-            .heading(I18l.lang().listHeading, I18l.lang().activeEvents));
+        Component message = Quartz.getInstance().messenger()
+            .heading(I18l.lang().listHeading, I18l.lang().activeEvents);
+        Quartz.getInstance().audiences().sender(sender).sendMessage(message);
 
         for (EventConfiguration event : events) {
-            sender.sendMessage(Quartz.getInstance().messenger().activeEventListEntry(event));
+            Component entryMessage = Quartz.getInstance().messenger().activeEventListEntry(event);
+            Quartz.getInstance().audiences().sender(sender).sendMessage(entryMessage);
         }
     }
 
@@ -55,16 +60,18 @@ public class EventsCommand extends BaseCommand {
         List<EventConfiguration> events = Quartz.getInstance().quartzConfig().getEnabledEvents();
 
         if (events.isEmpty()) {
-            sender.sendMessage(Quartz.getInstance().messenger().error(I18l.lang().noEvents));
+            Component message = Quartz.getInstance().messenger().error(I18l.lang().noEvents);
+            Quartz.getInstance().audiences().sender(sender).sendMessage(message);
 
             return;
         }
 
-        sender.sendMessage(Quartz.getInstance().messenger()
-                .heading(I18l.lang().listHeading, I18l.lang().events));
+        Component message = Quartz.getInstance().messenger()
+            .heading(I18l.lang().listHeading, I18l.lang().events);
 
         for (EventConfiguration event : events) {
-            sender.sendMessage(Quartz.getInstance().messenger().eventListEntry(event));
+            Component entryMessage = Quartz.getInstance().messenger().eventListEntry(event);
+            Quartz.getInstance().audiences().sender(sender).sendMessage(entryMessage);
         }
     }
 }

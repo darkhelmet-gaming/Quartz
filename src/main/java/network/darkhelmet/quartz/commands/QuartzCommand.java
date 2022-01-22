@@ -10,6 +10,8 @@ import co.aikar.commands.annotation.Values;
 
 import java.util.Optional;
 
+import net.kyori.adventure.text.Component;
+
 import network.darkhelmet.quartz.EventManager;
 import network.darkhelmet.quartz.EventPhase;
 import network.darkhelmet.quartz.Quartz;
@@ -38,7 +40,8 @@ public class QuartzCommand extends BaseCommand {
         Quartz.getInstance().loadSchedules();
 
         // Send message
-        sender.sendMessage(Quartz.getInstance().messenger().success(I18l.lang().reloadedEventsAndSchedules));
+        Component message = Quartz.getInstance().messenger().success(I18l.lang().reloadedEventsAndSchedules);
+        Quartz.getInstance().audiences().sender(sender).sendMessage(message);
     }
 
     /**
@@ -58,8 +61,10 @@ public class QuartzCommand extends BaseCommand {
             EventConfiguration event = optionalEventConfig.get();
             EventManager.start(event);
 
-            sender.sendMessage(Quartz.getInstance().messenger()
-                .success(String.format(I18l.lang().forceStartingEvent, event.name())));
+            Component message = Quartz.getInstance().messenger()
+                .success(String.format(I18l.lang().forceStartingEvent, event.name()));
+
+            Quartz.getInstance().audiences().sender(sender).sendMessage(message);
         }
     }
 
@@ -80,8 +85,10 @@ public class QuartzCommand extends BaseCommand {
             EventConfiguration event = optionalEventConfig.get();
             EventManager.end(event);
 
-            sender.sendMessage(Quartz.getInstance().messenger()
-                .info(String.format(I18l.lang().forceEndingEvent, event.name())));
+            Component message = Quartz.getInstance().messenger()
+                .info(String.format(I18l.lang().forceEndingEvent, event.name()));
+
+            Quartz.getInstance().audiences().sender(sender).sendMessage(message);
         }
     }
 
@@ -102,8 +109,10 @@ public class QuartzCommand extends BaseCommand {
             EventConfiguration event = optionalEventConfig.get();
             EventManager.simulatePhase(event, EventPhase.START);
 
-            sender.sendMessage(Quartz.getInstance().messenger()
-                .info(String.format(I18l.lang().simulatingEventStart, event.name())));
+            Component message = Quartz.getInstance().messenger()
+                .info(String.format(I18l.lang().simulatingEventStart, event.name()));
+
+            Quartz.getInstance().audiences().sender(sender).sendMessage(message);
         }
     }
 
@@ -124,8 +133,10 @@ public class QuartzCommand extends BaseCommand {
             EventConfiguration event = optionalEventConfig.get();
             EventManager.simulatePhase(event, EventPhase.ACTIVE);
 
-            sender.sendMessage(Quartz.getInstance().messenger()
-                .info(String.format(I18l.lang().simulatingEventActive, event.name())));
+            Component message = Quartz.getInstance().messenger()
+                .info(String.format(I18l.lang().simulatingEventActive, event.name()));
+
+            Quartz.getInstance().audiences().sender(sender).sendMessage(message);
         }
     }
 
@@ -146,8 +157,10 @@ public class QuartzCommand extends BaseCommand {
             EventConfiguration event = optionalEventConfig.get();
             EventManager.simulatePhase(event, EventPhase.END);
 
-            sender.sendMessage(Quartz.getInstance().messenger()
-                .info(String.format(I18l.lang().simulatingEventEnd, event.name())));
+            Component message = Quartz.getInstance().messenger()
+                .info(String.format(I18l.lang().simulatingEventEnd, event.name()));
+
+            Quartz.getInstance().audiences().sender(sender).sendMessage(message);
         }
     }
 
