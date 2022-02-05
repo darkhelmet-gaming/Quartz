@@ -111,11 +111,11 @@ public class EventManager {
      * @param event The event
      * @return Whether the event is active
      */
-    public static boolean active(EventConfiguration event) {
+    public static boolean active(EventConfiguration event, Player player) {
         if (isEventActive(event)) {
-            showDisplays(event, EventPhase.ACTIVE);
-            runCommands(event, EventPhase.ACTIVE);
-            playSounds(event, EventPhase.ACTIVE);
+            showDisplays(event, EventPhase.ACTIVE, player);
+            runCommands(event, EventPhase.ACTIVE, player);
+            playSounds(event, EventPhase.ACTIVE, player);
 
             return true;
         }
@@ -204,6 +204,35 @@ public class EventManager {
     }
 
     /**
+     * Runs all commands for event/phase for a specific player.
+     *
+     * @param event The event
+     * @param phase The phase
+     * @param player The player
+     */
+    private static void runCommands(EventConfiguration event, EventPhase phase, Player player) {
+        for (String command : event.getPhase(phase).commands()) {
+            Quartz.getInstance().debug(String.format("Running command for event [%s]: %s",
+                event.name(),
+                command));
+
+            // Events via the job scheduler are async, so we need to execute commands on the game thread
+            Bukkit.getScheduler().runTask(Quartz.getInstance(), () -> {
+                if (command.contains("%")) {
+                    // If commands contain placeholders, run for  player
+                    if (event.permission().equalsIgnoreCase("false") || player.hasPermission(event.permission())) {
+                        String parsedCommand = PlaceholderAPI.setPlaceholders(player, command);
+                        Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), parsedCommand);
+                    }
+                } else {
+                    // Otherwise just run as a server command
+                    Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command);
+                }
+            });
+        }
+    }
+
+    /**
      * Runs a command.
      *
      * @param command The command
@@ -223,7 +252,7 @@ public class EventManager {
      * @param event The event
      * @param phase The phase
      */
-    public static void showDisplays(EventConfiguration event, EventPhase phase) {
+    private static void showDisplays(EventConfiguration event, EventPhase phase) {
         Map<String, DisplayConfiguration> displays = getDisplays(event, phase);
 
         if (displays.containsKey("title")) {
@@ -236,25 +265,54 @@ public class EventManager {
     }
 
     /**
+     * Show displays for the given event/phase.
+     *
+     * @param event The event
+     * @param phase The phase
+     */
+    private static void showDisplays(EventConfiguration event, EventPhase phase, Player player) {
+        Map<String, DisplayConfiguration> displays = getDisplays(event, phase);
+
+        if (displays.containsKey("title")) {
+            showTitle(event, displays.get("title"), player);
+        }
+
+        if (displays.containsKey("chat")) {
+            showChatMessage(event, displays.get("chat"), player);
+        }
+    }
+
+    /**
      * Play sounds for an event/phase.
      *
      * @param event The event
      * @param phase The phase
      */
-    public static void playSounds(EventConfiguration event, EventPhase phase) {
+    private static void playSounds(EventConfiguration event, EventPhase phase) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            playSounds(event, phase, player);
+        }
+    }
+
+    /**
+     * Play sounds for an event/phase for a specific player.
+     *
+     * @param event The event
+     * @param phase The phase
+     * @param player The player
+     */
+    private static void playSounds(EventConfiguration event, EventPhase phase, Player player) {
         PhaseConfiguration phaseConfig = event.getPhase(phase);
 
         if (phaseConfig.sound() != null) {
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                if (event.permission().equalsIgnoreCase("false") || player.hasPermission(event.permission())) {
-                    player.playSound(player.getLocation(), phaseConfig.sound(), 1, 1);
-                }
+            if (event.permission().equalsIgnoreCase("false") || player.hasPermission(event.permission())) {
+                player.playSound(player.getLocation(), phaseConfig.sound(), 1, 1);
             }
         }
     }
 
     /**
-     * Show a chat message for an event.
+     * Show a chat message for an event to all players.
      *
      * @param event The event
      * @param display The display
@@ -262,23 +320,50 @@ public class EventManager {
     private static void showChatMessage(EventConfiguration event, DisplayConfiguration display) {
         if (!display.templates().isEmpty()) {
             for (Player player : Bukkit.getOnlinePlayers()) {
-                if (event.permission().equalsIgnoreCase("false") || player.hasPermission(event.permission())) {
-                    for (String rawMessage : display.templates()) {
-                        Component message = DisplayFormatter.format(player, event, rawMessage);
-                        Quartz.getInstance().audiences().player(player).sendMessage(message);
-                    }
+                showChatMessage(event, display, player);
+            }
+        }
+    }
+
+    /**
+     * Show a chat message for an event to a specific player.
+     *
+     * @param event The event
+     * @param display The display
+     * @param player The player
+     */
+    private static void showChatMessage(EventConfiguration event, DisplayConfiguration display, Player player) {
+        if (!display.templates().isEmpty()) {
+            if (event.permission().equalsIgnoreCase("false") || player.hasPermission(event.permission())) {
+                for (String rawMessage : display.templates()) {
+                    Component message = DisplayFormatter.format(player, event, rawMessage);
+                    Quartz.getInstance().audiences().player(player).sendMessage(message);
                 }
             }
         }
     }
 
     /**
-     * Show a title/subtitle for an event.
+     * Show a title/subtitle for an event to all players.
      *
      * @param event The event
      * @param display The display
      */
     private static void showTitle(EventConfiguration event, DisplayConfiguration display) {
+        // Display for appropriate players
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            showTitle(event, display, onlinePlayer);
+        }
+    }
+
+    /**
+     * Show a title/subtitle for an event to a specific player.
+     *
+     * @param event The event
+     * @param display The display
+     * @param player The player
+     */
+    private static void showTitle(EventConfiguration event, DisplayConfiguration display, Player player){
         String titleStr = "";
         String subtitleStr = "";
 
@@ -290,16 +375,13 @@ public class EventManager {
             subtitleStr = display.templates().get(1);
         }
 
-        // Display for appropriate players
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            if (event.permission().equalsIgnoreCase("false") || player.hasPermission(event.permission())) {
-                // Build the title/components
-                Component mainTitle = DisplayFormatter.format(player, event, titleStr);
-                Component subTitle = DisplayFormatter.format(player, event, subtitleStr);
-                Title title = Title.title(mainTitle, subTitle);
+        if (event.permission().equalsIgnoreCase("false") || player.hasPermission(event.permission())) {
+            // Build the title/components
+            Component mainTitle = DisplayFormatter.format(player, event, titleStr);
+            Component subTitle = DisplayFormatter.format(player, event, subtitleStr);
+            Title title = Title.title(mainTitle, subTitle);
 
-                Quartz.getInstance().audiences().player(player).showTitle(title);
-            }
+            Quartz.getInstance().audiences().player(player).showTitle(title);
         }
     }
 }

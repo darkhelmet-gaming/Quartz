@@ -22,7 +22,7 @@ public class PlayerJoinListener implements Listener {
         List<EventConfiguration> events = Quartz.getInstance().getActiveEvents();
 
         for (EventConfiguration activeEvent : events) {
-            EventManager.active(activeEvent);
+            EventManager.active(activeEvent, event.getPlayer());
         }
     }
 }
