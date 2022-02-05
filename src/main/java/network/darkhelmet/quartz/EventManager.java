@@ -363,7 +363,7 @@ public class EventManager {
      * @param display The display
      * @param player The player
      */
-    private static void showTitle(EventConfiguration event, DisplayConfiguration display, Player player){
+    private static void showTitle(EventConfiguration event, DisplayConfiguration display, Player player) {
         String titleStr = "";
         String subtitleStr = "";
 
