@@ -139,8 +139,10 @@ public class EventManager {
 
             Quartz.getInstance().storageAdapter().saveState();
 
-            QuartzEventStart bukkitEvent = new QuartzEventStart(event);
-            Bukkit.getServer().getPluginManager().callEvent(bukkitEvent);
+            Bukkit.getScheduler().runTask(Quartz.getInstance(), () -> {
+                QuartzEventStart bukkitEvent = new QuartzEventStart(event);
+                Bukkit.getServer().getPluginManager().callEvent(bukkitEvent);
+            });
 
             return true;
         }
@@ -164,8 +166,10 @@ public class EventManager {
 
             Quartz.getInstance().storageAdapter().saveState();
 
-            QuartzEventEnd bukkitEvent = new QuartzEventEnd(event);
-            Bukkit.getServer().getPluginManager().callEvent(bukkitEvent);
+            Bukkit.getScheduler().runTask(Quartz.getInstance(), () -> {
+                QuartzEventEnd bukkitEvent = new QuartzEventEnd(event);
+                Bukkit.getServer().getPluginManager().callEvent(bukkitEvent);
+            });
 
             return true;
         }
