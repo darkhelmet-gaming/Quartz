@@ -7,7 +7,7 @@ buildscript {
 }
 
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.0.0"
+    id "com.github.johnrengelman.shadow" version "7.1.2"
     id "xyz.jpenilla.run-paper" version "1.0.6"
 }
 
@@ -75,6 +75,8 @@ shadowJar {
     relocate 'com.cronutils', 'network.darkhelmet.quartz.cronutils'
     relocate 'org.spongepowered', 'network.darkhelmet.quartz.spongepowered'
     relocate 'net.kyori', 'network.darkhelmet.quartz.kyori'
+
+    minimize()
 }
 
 runServer {
