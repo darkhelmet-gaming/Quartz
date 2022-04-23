@@ -39,7 +39,7 @@ version = project.property("version")
 targetCompatibility = sourceCompatibility = JavaVersion.VERSION_17
 
 dependencies {
-    compileOnly 'org.spigotmc:spigot-api:1.18-R0.1-SNAPSHOT'
+    compileOnly 'org.spigotmc:spigot-api:1.18.2-R0.1-SNAPSHOT'
     compileOnly 'me.clip:placeholderapi:2.11.1'
     implementation 'co.aikar:acf-paper:0.5.0-SNAPSHOT'
     implementation 'co.aikar:idb-core:1.0.0-SNAPSHOT'
@@ -73,13 +73,11 @@ shadowJar {
     relocate 'com.cronutils', 'network.darkhelmet.quartz.cronutils'
     relocate 'org.spongepowered', 'network.darkhelmet.quartz.spongepowered'
     relocate 'net.kyori', 'network.darkhelmet.quartz.kyori'
-
-    minimize()
 }
 
 runServer {
     // Configure the Minecraft version for our task.
     // This is the only required configuration besides applying the plugin.
     // Your plugin's jar (or shadowJar if present) will be used automatically.
-    minecraftVersion("1.18.1")
+    minecraftVersion("1.18.2")
 }
