@@ -2,12 +2,12 @@ package network.darkhelmet.quartz.formatters;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Optional;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.minimessage.Template;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 
 import network.darkhelmet.quartz.config.EventConfiguration;
 import network.darkhelmet.quartz.config.OutputConfiguration;
@@ -19,14 +19,14 @@ public class OutputFormatter {
     private OutputConfiguration outputConfiguration;
 
     /**
-     * Prefix.
-     */
-    private Component prefix;
-
-    /**
      * The date/time formatter.
      */
     private DateTimeFormatter dateTimeFormatter;
+
+    /**
+     * The prefix.
+     */
+    private TagResolver prefix;
 
     /**
      * Construct a new instance.
@@ -36,11 +36,11 @@ public class OutputFormatter {
     public OutputFormatter(OutputConfiguration outputConfiguration) {
         this.outputConfiguration = outputConfiguration;
 
-        // Format the prefix now as we'll never change it.
-        prefix = MiniMessage.get().parse(outputConfiguration.prefix());
+        this.prefix = Placeholder.component("prefix",
+            MiniMessage.miniMessage().deserialize(outputConfiguration.prefix()));
 
         // Cache the date formatter
-        dateTimeFormatter = DateTimeFormatter.ofPattern(outputConfiguration.date());
+        this.dateTimeFormatter = DateTimeFormatter.ofPattern(outputConfiguration.date());
     }
 
     /**
@@ -104,12 +104,12 @@ public class OutputFormatter {
      * @return The formatted component
      */
     private Component format(String template, String heading, String message) {
-        Template prefixTemplate = Template.of("prefix", prefix);
-        Template headingTemplate = Template.of("heading", heading);
-        Template messageTemplate = Template.of("message", message);
+        TagResolver.Single headingTemplate = Placeholder.parsed("heading", heading);
+        TagResolver.Single messageTemplate = Placeholder.parsed("message", message);
 
-        List<Template> templates = List.of(prefixTemplate, headingTemplate, messageTemplate);
-        return MiniMessage.get().parse(template, templates);
+        TagResolver placeholders = TagResolver.resolver(prefix, headingTemplate, messageTemplate);
+
+        return MiniMessage.miniMessage().deserialize(template, placeholders);
     }
 
     /**
@@ -140,17 +140,11 @@ public class OutputFormatter {
      * @return The formatted component
      */
     private Component eventListEntry(String template, EventConfiguration event) {
-        Template prefixTemplate = Template.of("prefix", prefix);
-        Template eventNameTemplate = Template.of("eventName", event.name());
-        Template eventDescTemplate = Template.of("eventDescription", event.description());
-
         String nextStartStr = "";
         Optional<ZonedDateTime> nextStart = event.getNextStartExecution();
         if (nextStart.isPresent()) {
             nextStartStr = nextStart.get().format(dateTimeFormatter);
         }
-
-        Template nextStartTemplate = Template.of("nextStart", nextStartStr);
 
         String nextEndStr = "";
         Optional<ZonedDateTime> nextEnd = event.getNextEndExecution();
@@ -158,14 +152,14 @@ public class OutputFormatter {
             nextEndStr = nextEnd.get().format(dateTimeFormatter);
         }
 
-        Template nextEndTemplate = Template.of("nextEnd", nextEndStr);
+        TagResolver.Single eventNameTemplate = Placeholder.parsed("eventName", event.name());
+        TagResolver.Single eventDescTemplate = Placeholder.parsed("eventDescription", event.description());
+        TagResolver.Single nextStartTemplate = Placeholder.parsed("nextStart", nextStartStr);
+        TagResolver.Single nextEndTemplate = Placeholder.parsed("nextEnd", nextEndStr);
 
-        List<Template> templates = List.of(
-            prefixTemplate,
-            eventNameTemplate,
-            eventDescTemplate,
-            nextStartTemplate,
-            nextEndTemplate);
-        return MiniMessage.get().parse(template, templates);
+        TagResolver placeholders = TagResolver.resolver(
+            prefix, eventNameTemplate, eventDescTemplate, nextStartTemplate, nextEndTemplate);
+
+        return MiniMessage.miniMessage().deserialize(template, placeholders);
     }
 }

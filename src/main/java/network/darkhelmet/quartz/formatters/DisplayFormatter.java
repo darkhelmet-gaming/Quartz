@@ -1,12 +1,11 @@
 package network.darkhelmet.quartz.formatters;
 
-import java.util.List;
-
 import me.clip.placeholderapi.PlaceholderAPI;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.minimessage.Template;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 
 import network.darkhelmet.quartz.config.EventConfiguration;
 
@@ -23,11 +22,12 @@ public class DisplayFormatter {
      * @return The component
      */
     public static Component format(EventConfiguration event, String rawMessage) {
-        Template eventName = Template.of("eventName", event.name());
-        Template eventDescription = Template.of("eventDescription", event.description());
+        TagResolver.Single eventName = Placeholder.parsed("eventName", event.name());
+        TagResolver.Single eventDescription = Placeholder.parsed("eventDescription", event.description());
 
-        List<Template> templates = List.of(eventName, eventDescription);
-        return MiniMessage.get().parse(rawMessage, templates);
+        TagResolver placeholders = TagResolver.resolver(eventName, eventDescription);
+
+        return MiniMessage.miniMessage().deserialize(rawMessage, placeholders);
     }
 
     /**

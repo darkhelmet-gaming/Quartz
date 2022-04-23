@@ -27,8 +27,6 @@ repositories {
     mavenLocal()
     mavenCentral()
 
-    maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
-    maven { url = 'https://oss.sonatype.org/content/repositories/central' }
     maven { url = "https://repo.aikar.co/content/groups/aikar/" }
     maven { url = "https://repo.codemc.io/repository/maven-public/" }
     maven { url = "https://jitpack.io" }
@@ -46,10 +44,10 @@ dependencies {
     implementation 'co.aikar:acf-paper:0.5.0-SNAPSHOT'
     implementation 'co.aikar:idb-core:1.0.0-SNAPSHOT'
     implementation 'org.spongepowered:configurate-hocon:4.1.2'
-    implementation 'net.kyori:adventure-api:4.9.3'
-    implementation 'net.kyori:adventure-platform-bukkit:4.0.1'
-    implementation 'net.kyori:adventure-text-serializer-plain:4.9.3'
-    implementation 'net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT'
+    implementation 'net.kyori:adventure-api:4.10.1'
+    implementation 'net.kyori:adventure-platform-bukkit:4.1.0'
+    implementation 'net.kyori:adventure-text-serializer-plain:4.10.1'
+    implementation 'net.kyori:adventure-text-minimessage:4.10.1'
     implementation group: 'org.quartz-scheduler', name: 'quartz', version: '2.3.0'
     implementation group: 'com.cronutils', name: 'cron-utils', version: '9.1.6'
 
