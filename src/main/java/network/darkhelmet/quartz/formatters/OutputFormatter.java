@@ -152,10 +152,10 @@ public class OutputFormatter {
             nextEndStr = nextEnd.get().format(dateTimeFormatter);
         }
 
-        TagResolver.Single eventNameTemplate = Placeholder.parsed("eventName", event.name());
-        TagResolver.Single eventDescTemplate = Placeholder.parsed("eventDescription", event.description());
-        TagResolver.Single nextStartTemplate = Placeholder.parsed("nextStart", nextStartStr);
-        TagResolver.Single nextEndTemplate = Placeholder.parsed("nextEnd", nextEndStr);
+        TagResolver.Single eventNameTemplate = Placeholder.parsed("event_name", event.name());
+        TagResolver.Single eventDescTemplate = Placeholder.parsed("event_description", event.description());
+        TagResolver.Single nextStartTemplate = Placeholder.parsed("next_start", nextStartStr);
+        TagResolver.Single nextEndTemplate = Placeholder.parsed("next_end", nextEndStr);
 
         TagResolver placeholders = TagResolver.resolver(
             prefix, eventNameTemplate, eventDescTemplate, nextStartTemplate, nextEndTemplate);

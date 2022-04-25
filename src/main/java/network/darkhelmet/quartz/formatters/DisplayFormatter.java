@@ -22,8 +22,8 @@ public class DisplayFormatter {
      * @return The component
      */
     public static Component format(EventConfiguration event, String rawMessage) {
-        TagResolver.Single eventName = Placeholder.parsed("eventName", event.name());
-        TagResolver.Single eventDescription = Placeholder.parsed("eventDescription", event.description());
+        TagResolver.Single eventName = Placeholder.parsed("event_name", event.name());
+        TagResolver.Single eventDescription = Placeholder.parsed("event_description", event.description());
 
         TagResolver placeholders = TagResolver.resolver(eventName, eventDescription);
 

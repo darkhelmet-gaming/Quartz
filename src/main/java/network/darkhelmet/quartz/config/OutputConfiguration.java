@@ -24,15 +24,15 @@ public class OutputConfiguration {
     private String date = "eee MMMM dd yyyy hh:mm a Z";
 
     @Comment("Configure active event entry formats when used in list output.")
-    private String activeEventListEntry = "<green><eventName>\n" +
-            "      <yellow><eventDescription>\n" +
-            "      <gray>Ends: <white><nextEnd>";
+    private String activeEventListEntry = "<green><event_name>\n" +
+            "      <yellow><event_description>\n" +
+            "      <gray>Ends: <white><next_end>";
 
     @Comment("Configure event entry formats when used in list output.")
-    private String eventListEntry = "<green><eventName>\n" +
-            "      <yellow><eventDescription>\n" +
-            "      <gray>Starts: <white><nextStart>\n" +
-            "      <gray>Ends: <white><nextEnd>";
+    private String eventListEntry = "<green><event_name>\n" +
+            "      <yellow><event_description>\n" +
+            "      <gray>Starts: <white><next_start>\n" +
+            "      <gray>Ends: <white><next_end>";
 
     public String prefix() {
         return prefix;

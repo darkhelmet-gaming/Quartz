@@ -40,9 +40,9 @@ public class DisplayConfiguration {
         types.add("title");
 
         if (phase.equals(EventPhase.START)) {
-            templates.add("<#00ff00><eventName> <white>Has Begun!");
+            templates.add("<#00ff00><event_name> <white>Has Begun!");
         } else {
-            templates.add("<#00ff00><eventName> <white>Has Ended!");
+            templates.add("<#00ff00><event_name> <white>Has Ended!");
         }
 
         this.phases.add(phase);
