@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.UUID;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -273,7 +274,7 @@ public class Quartz extends JavaPlugin {
     }
 
     private void scheduleJob(CommandConfiguration command) {
-        String jobKey = command.command();
+        String jobKey = UUID.randomUUID().toString();
         ZonedDateTime now = ZonedDateTime.now();
 
         // Verify the schedule start date is in the future
@@ -312,7 +313,7 @@ public class Quartz extends JavaPlugin {
      * @param schedule The schedule
      */
     private void scheduleJob(EventConfiguration event, ScheduleConfiguration schedule) {
-        String jobKey = event.name() + schedule.starts() + schedule.ends();
+        String jobKey = UUID.randomUUID().toString();
         ZonedDateTime now = ZonedDateTime.now();
 
         // Verify the schedule start date is in the future
